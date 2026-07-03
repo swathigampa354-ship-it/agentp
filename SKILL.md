@@ -4,8 +4,6 @@ description: Publish short-form videos to TikTok, Instagram Reels, YouTube Short
 metadata:
   publicName: Taisly Social Media Posting Skill
   requirements:
-    env:
-      - TAISLY_API_KEY
     binaries:
       - taisly
 ---
@@ -28,6 +26,20 @@ Use this skill when a user asks an AI agent to publish, schedule, or repost shor
 
 ## Environment
 
+Prefer the browser setup flow when the user has not configured Taisly yet:
+
+```bash
+taisly setup --agent <agent-slug>
+# Ask the user to open the returned loginUrl and finish authentication.
+taisly checkin --agent <agent-slug>
+```
+
+Use a short slug for the current agent, for example `claude-code`, `codex`, `cursor`, `windsurf`, `openclaw`, `hermes-agent`, `cline`, or `aider`.
+
+The checkin command stores a local Taisly agent credential for later CLI and MCP calls.
+
+Manual API key fallback:
+
 ```bash
 export TAISLY_API_KEY="taisly_..."
 export TAISLY_API_URL="https://app.taisly.com/api/private"
@@ -37,6 +49,8 @@ export TAISLY_API_URL="https://app.taisly.com/api/private"
 
 ```bash
 taisly auth:status
+taisly setup --agent <agent-slug>
+taisly checkin --agent <agent-slug>
 taisly platforms:list
 taisly integrations:list
 taisly platforms:schema --platform TikTok
@@ -55,6 +69,8 @@ All commands return JSON.
 
 When the MCP server is connected, use these tools instead of shell commands:
 
+- `taisly_agent_setup_start`
+- `taisly_agent_checkin`
 - `taisly_auth_status`
 - `taisly_platforms_list`
 - `taisly_platform_schema`
@@ -67,20 +83,23 @@ When the MCP server is connected, use these tools instead of shell commands:
 
 ## Posting Workflow
 
-1. Run `taisly auth:status`.
-2. Run `taisly platforms:list`.
-3. Match the user's requested platforms to connected platform IDs.
-4. Run `taisly platforms:schema --platform <name>` for constraints.
-5. Run `taisly posts:validate`.
-6. Confirm destination accounts and caption with the user.
-7. Run `taisly posts:create`.
-8. Report the returned `historyId`, scheduled date, and per-platform initial statuses.
+1. If Taisly is not connected yet, run `taisly_agent_setup_start` or `taisly setup --agent <agent-slug>` and give the user the returned login URL.
+2. Wait for the user to finish browser login, then run `taisly_agent_checkin` or `taisly checkin --agent <agent-slug>`.
+3. Run `taisly auth:status`.
+4. Run `taisly platforms:list`.
+5. Match the user's requested platforms to connected platform IDs.
+6. Run `taisly platforms:schema --platform <name>` for constraints.
+7. Run `taisly posts:validate`.
+8. Confirm destination accounts and caption with the user.
+9. Run `taisly posts:create`.
+10. Report the returned `historyId`, scheduled date, and per-platform initial statuses.
 
 For MCP, follow the same sequence with `taisly_auth_status`, `taisly_platforms_list`, `taisly_platform_schema`, `taisly_posts_validate`, `taisly_posts_create`, and `taisly_posts_status`.
 
 ## Error Handling
 
 - `TAISLY_API_KEY_MISSING`: ask the user to create or provide an API key.
+- `SETUP_SESSION_MISSING`: run `taisly setup --agent <agent-slug>`, ask the user to open the returned login URL, then run `taisly checkin --agent <agent-slug>`.
 - `PLATFORMS_REQUIRED`: ask which connected accounts should receive the post.
 - `VIDEO_REQUIRED`: ask for a local video path.
 - `POST_NOT_FOUND_IN_RECENT_HISTORY`: tell the user the post was created but a dedicated status endpoint is not available yet; check Taisly History.

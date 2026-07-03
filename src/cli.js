@@ -1,6 +1,11 @@
 #!/usr/bin/env node
-import { Taisly, TaislyError, readJsonFile } from "./index.js";
+import {
+  Taisly,
+  TaislyError,
+  readJsonFile,
+} from "./index.js";
 import { startMcpServer } from "./mcp.js";
+import { checkinAgent, setupAgent } from "./setup.js";
 
 const client = new Taisly();
 const [command, ...rawArgs] = process.argv.slice(2);
@@ -34,6 +39,12 @@ if (command === "mcp") {
 
 async function run(commandName, options) {
   switch (commandName) {
+    case "setup":
+      return setupAgent(options);
+
+    case "checkin":
+      return checkinAgent(options);
+
     case "auth:status":
       return client.auth.status();
 
@@ -99,6 +110,8 @@ function help() {
     success: true,
     commands: [
       "auth:status",
+      "setup --agent <agent>",
+      "checkin --agent <agent>",
       "platforms:list",
       "integrations:list",
       "platforms:schema --platform TikTok",
@@ -111,9 +124,13 @@ function help() {
       "reposts:create --from <platformId> --to <platformId,platformId>",
       "mcp",
     ],
-    env: ["TAISLY_API_KEY", "TAISLY_API_URL"],
+    env: [
+      "TAISLY_API_KEY",
+      "TAISLY_API_URL",
+      "TAISLY_CONFIG_HOME",
+    ],
     jsonInput:
-      "Pass --json file.json or --input file.json to load command options from a JSON file. Run taisly mcp to start the stdio MCP server.",
+      "Pass --json file.json or --input file.json to load command options from a JSON file. Run taisly setup to connect through the browser, then taisly mcp to start the stdio MCP server.",
   };
 }
 

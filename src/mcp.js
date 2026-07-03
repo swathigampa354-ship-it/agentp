@@ -1,5 +1,6 @@
 import { createInterface } from "node:readline";
 import { Taisly, TaislyError } from "./index.js";
+import { checkinAgent, setupAgent } from "./setup.js";
 
 const PROTOCOL_VERSION = "2025-06-18";
 const SUPPORTED_PROTOCOL_VERSIONS = new Set([
@@ -17,6 +18,48 @@ const JSON_OBJECT_SCHEMA = {
 };
 
 const TOOLS = [
+  {
+    name: "taisly_agent_setup_start",
+    title: "Start Taisly Agent Setup",
+    description:
+      "Start browser-based Taisly authentication for an AI agent. Returns a loginUrl that the user must open and approve before checkin.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        agent: {
+          type: "string",
+          description:
+            "Short agent slug, for example claude-code, codex, cursor, openclaw, or hermes-agent.",
+        },
+        agentId: {
+          type: "string",
+          description: "Alias for agent.",
+        },
+      },
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "taisly_agent_checkin",
+    title: "Finish Taisly Agent Setup",
+    description:
+      "Finish setup after the user approves the loginUrl in the browser. Saves the local Taisly agent credential for later CLI and MCP calls.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        agent: {
+          type: "string",
+          description:
+            "Short agent slug used with taisly_agent_setup_start.",
+        },
+        agentId: {
+          type: "string",
+          description: "Alias for agent.",
+        },
+      },
+      additionalProperties: false,
+    },
+  },
   {
     name: "taisly_auth_status",
     title: "Taisly Auth Status",
@@ -201,6 +244,8 @@ const TOOLS = [
 ];
 
 const TOOL_HANDLERS = {
+  taisly_agent_setup_start: (_client, args) => setupAgent(args),
+  taisly_agent_checkin: (_client, args) => checkinAgent(args),
   taisly_auth_status: (client) => client.auth.status(),
   taisly_platforms_list: (client) => client.platforms.list(),
   taisly_platform_schema: (client, args) => client.platforms.schema(args.platform),
@@ -347,7 +392,7 @@ class TaislyMcpServer {
         version: SERVER_VERSION,
       },
       instructions:
-        "Use Taisly tools to discover connected social accounts, validate posts, ask for explicit user confirmation, then create and monitor posts.",
+        "If Taisly is not connected yet, use taisly_agent_setup_start, send the user the returned loginUrl, wait for browser approval, then use taisly_agent_checkin. After setup, discover connected social accounts, validate posts, ask for explicit user confirmation, then create and monitor posts.",
     };
   }
 

@@ -77,7 +77,23 @@ node packages/agent/src/cli.js help
 
 ## Authentication
 
-Create an API key in [Taisly Settings](https://app.taisly.com/en/settings), then set:
+The easiest flow is to let your AI agent open the browser login for you. Use any short agent slug, for example `claude-code`, `codex`, `cursor`, `windsurf`, `openclaw`, `hermes-agent`, `cline`, or `aider`.
+
+```txt
+Help me set up Taisly Agent Kit.
+
+1. Install the CLI: npm i -g @taisly/agent
+2. Run taisly setup --agent <agent-slug> and send me the login URL so I can finish authentication.
+3. Wait for me to finish login in the browser.
+4. Run taisly checkin --agent <agent-slug>.
+5. Tell me if Taisly is connected and ready. If not, tell me what failed.
+
+If you cannot install or run the Taisly CLI in this environment, stop and tell me to open Taisly Settings instead.
+```
+
+The setup command stores a local Taisly agent credential, so later CLI and MCP commands can run without manually copying an API key.
+
+Manual fallback: create an API key in [Taisly Settings](https://app.taisly.com/en/settings), then set:
 
 ```bash
 export TAISLY_API_KEY="taisly_..."
@@ -140,17 +156,41 @@ Taisly Agent Kit includes a stdio MCP server in the same package. MCP clients ca
   "mcpServers": {
     "taisly": {
       "command": "npx",
-      "args": ["@taisly/agent", "mcp"],
-      "env": {
-        "TAISLY_API_KEY": "taisly_..."
-      }
+      "args": ["@taisly/agent", "mcp"]
     }
   }
 }
 ```
 
+If you already use a manual API key, you can still pass `TAISLY_API_KEY` in the MCP server `env` block.
+
+Codex local MCP setup:
+
+```bash
+codex mcp add taisly -- npx @taisly/agent mcp
+```
+
+Claude Code local MCP setup:
+
+```bash
+claude mcp add taisly -- npx @taisly/agent mcp
+```
+
+Then ask the agent:
+
+```txt
+Use the Taisly MCP server you just added and run the Taisly agent setup start tool with agentId: "<agent-slug>".
+
+Send me the login URL and wait for me to finish in the browser.
+Then run the Taisly agent checkin tool with agentId: "<agent-slug>".
+After checkin, run the Taisly auth status tool.
+Tell me if Taisly is connected and ready. If not, tell me what failed.
+```
+
 Available MCP tools:
 
+- `taisly_agent_setup_start`
+- `taisly_agent_checkin`
 - `taisly_auth_status`
 - `taisly_platforms_list`
 - `taisly_platform_schema`
@@ -189,6 +229,8 @@ The `video` path must point to a real local file available to the agent. Support
 
 ```bash
 taisly auth:status
+taisly setup --agent <agent-slug>
+taisly checkin --agent <agent-slug>
 taisly platforms:list
 taisly integrations:list
 taisly platforms:schema --platform TikTok

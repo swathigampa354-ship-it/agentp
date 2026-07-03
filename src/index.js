@@ -1,5 +1,6 @@
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
+import { readStoredCredential } from "./config.js";
 
 export const DEFAULT_API_URL = "https://app.taisly.com/api/private";
 const DEFAULT_HISTORY_PAGE = 1;
@@ -17,15 +18,19 @@ const SUPPORTED_VIDEO_EXTENSIONS = Object.keys(VIDEO_MIME_BY_EXTENSION);
 
 export class Taisly {
   constructor(options = {}) {
-    this.apiKey = options.apiKey || process.env.TAISLY_API_KEY;
-    this.apiUrl = normalizeApiUrl(options.apiUrl || process.env.TAISLY_API_URL);
+    const storedCredential = readStoredCredential();
+    this.apiKey =
+      options.apiKey || process.env.TAISLY_API_KEY || storedCredential.apiKey;
+    this.apiUrl = normalizeApiUrl(
+      options.apiUrl || process.env.TAISLY_API_URL || storedCredential.apiUrl,
+    );
   }
 
   requireApiKey() {
     if (!this.apiKey) {
       throw new TaislyError(
         "TAISLY_API_KEY_MISSING",
-        "Set TAISLY_API_KEY or pass apiKey to the Taisly client.",
+        "Run `taisly setup --agent <agent>`, set TAISLY_API_KEY, or pass apiKey to the Taisly client.",
       );
     }
   }
@@ -355,6 +360,6 @@ function parseJson(text) {
   }
 }
 
-function normalizeApiUrl(value) {
+export function normalizeApiUrl(value) {
   return (value || DEFAULT_API_URL).replace(/\/$/, "");
 }
