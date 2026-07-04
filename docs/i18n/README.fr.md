@@ -14,6 +14,12 @@ Utilisez-le quand votre agent sait déjà préparer du contenu, rédiger le text
 
 ## Démarrage rapide
 
+Commencez gratuitement :
+
+- Installez le paquet gratuitement.
+- Connectez Taisly depuis votre agent IA.
+- Passez à une offre payante plus tard, lorsque votre parcours de publication doit changer d'échelle.
+
 Installez le paquet :
 
 ```bash

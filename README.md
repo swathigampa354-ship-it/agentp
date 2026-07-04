@@ -5,9 +5,9 @@
 [![Taisly MCP server](https://glama.ai/mcp/servers/taisly/agent/badges/card.svg)](https://glama.ai/mcp/servers/taisly/agent)
 [![Taisly MCP score](https://glama.ai/mcp/servers/taisly/agent/badges/score.svg)](https://glama.ai/mcp/servers/taisly/agent)
 
-AI agent social media posting for short-form video. Taisly Agent Kit is a JSON-first SDK, CLI, Agent Skill, and MCP server that lets AI agents, developer tools, and automation workflows publish videos to TikTok, Instagram Reels, YouTube Shorts, X, Facebook, and other connected social platforms through Taisly.
+Free AI-first social media posting for short-form video. Taisly Agent Kit is a JSON-first SDK, CLI, Agent Skill, and MCP server that lets AI agents, developer tools, and automation workflows publish videos to TikTok, Instagram Reels, YouTube Shorts, X, Facebook, and other connected social platforms through Taisly.
 
-Use it when your agent can create content, write captions, or prepare a campaign, but still needs a reliable video publishing API to put that content online.
+Use it when your agent can create content, write captions, or prepare a campaign, but still needs a reliable video publishing API to put that content online. The package is free to install and designed to get an agent from idea to published video without building every platform integration yourself.
 
 [Website](https://taisly.com/en) | [Agent Kit](https://taisly.com/en/ai-agent-kit) | [API Docs](https://docs.taisly.com/en/docs) | [npm](https://www.npmjs.com/package/@taisly/agent) | [GitHub](https://github.com/taisly/agent) | [Glama](https://glama.ai/mcp/servers/taisly/agent) | [Guide](https://taisly.com/en/blog/ai-agent-social-media-posting-api)
 
@@ -36,8 +36,18 @@ Read this guide in:
 - Automate video publishing from one local file to multiple connected social accounts.
 - Give agents a safe JSON workflow: discover accounts, validate payloads, create posts, and check status.
 - Add TikTok API posting automation, Instagram Reels automation, YouTube Shorts publishing, and cross-platform social media automation without building every platform integration yourself.
+- Start free, then upgrade only when the publishing workflow grows.
 
 Taisly handles the connected accounts and posting execution. Your agent handles planning, caption writing, campaign logic, or workflow orchestration.
+
+## Free AI-first posting
+
+- Install the package for free.
+- Create or connect a Taisly account from your AI agent.
+- Let the agent authenticate, connect social accounts, validate videos, and publish through a JSON-first workflow.
+- Upgrade later when you need higher-volume publishing, larger account sets, or automatic repost workflows.
+
+No credit card is required to get started. Paid plans are for teams and workflows that need more scale.
 
 ## Agent Skill
 
@@ -98,6 +108,8 @@ Manual fallback: create an API key in [Taisly Settings](https://app.taisly.com/e
 ```bash
 export TAISLY_API_KEY="taisly_..."
 ```
+
+Advanced: by default, the browser setup stores the local credential in `~/.taisly/config.json`. Most users should not change this. Set `TAISLY_CONFIG_HOME=/path/to/dir` only for CI, tests, or isolated agent profiles that need a separate credential store.
 
 ## Quick start
 
@@ -314,7 +326,7 @@ The `examples/` folder includes copy-paste workflows for common coding agents:
 - It is not a social media dashboard.
 - It is not a video editor.
 - It does not replace a Taisly account.
-- It requires connected social accounts and a Taisly API key.
+- It requires connected social accounts and a Taisly agent credential or API key.
 - It does not bypass platform rules, account permissions, or media validation.
 
 ## Current limits

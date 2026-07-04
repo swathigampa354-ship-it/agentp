@@ -14,6 +14,12 @@ Use it when your agent can prepare content, write post text, or plan a campaign,
 
 ## Quick start
 
+Start free:
+
+- Install the package for free.
+- Connect Taisly from your AI agent.
+- Upgrade later when your publishing workflow needs more scale.
+
 Install the package:
 
 ```bash

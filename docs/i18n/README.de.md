@@ -14,6 +14,12 @@ Nutze es, wenn dein Agent Inhalte vorbereitet, Veröffentlichungstexte schreibt 
 
 ## Schnellstart
 
+Kostenlos starten:
+
+- Installiere das Paket kostenlos.
+- Verbinde Taisly direkt aus deinem KI-Agenten.
+- Upgrade später, wenn dein Veröffentlichungsablauf mehr Umfang braucht.
+
 Installiere das Paket:
 
 ```bash

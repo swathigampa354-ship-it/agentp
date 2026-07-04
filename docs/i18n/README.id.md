@@ -14,6 +14,12 @@ Gunakan ketika agen Anda sudah bisa menyiapkan konten, menulis teks publikasi, a
 
 ## Mulai cepat
 
+Mulai gratis:
+
+- Pasang paket secara gratis.
+- Hubungkan Taisly dari agen AI Anda.
+- Tingkatkan paket nanti ketika alur publikasi Anda membutuhkan skala yang lebih besar.
+
 Instal paket:
 
 ```bash

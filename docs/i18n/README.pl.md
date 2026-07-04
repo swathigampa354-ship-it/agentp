@@ -14,6 +14,12 @@ Użyj go, gdy agent potrafi już przygotować treść, napisać opis publikacji 
 
 ## Szybki start
 
+Zacznij bezpłatnie:
+
+- Zainstaluj pakiet bezpłatnie.
+- Połącz Taisly bezpośrednio z agenta AI.
+- Przejdź na płatny plan później, gdy przepływ publikacji będzie wymagał większej skali.
+
 Zainstaluj pakiet:
 
 ```bash

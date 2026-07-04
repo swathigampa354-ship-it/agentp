@@ -14,6 +14,12 @@ Use-o quando o agente já consegue preparar conteúdo, escrever o texto da publi
 
 ## Início rápido
 
+Comece gratuitamente:
+
+- Instale o pacote gratuitamente.
+- Ligue a Taisly a partir do seu agente de IA.
+- Faça upgrade mais tarde, quando o seu fluxo de publicação precisar de mais escala.
+
 Instale o pacote:
 
 ```bash

@@ -141,7 +141,6 @@ function help() {
     ],
     env: [
       "TAISLY_API_KEY",
-      "TAISLY_CONFIG_HOME",
     ],
     jsonInput:
       "Pass --json file.json or --input file.json to load command options from a JSON file. Run taisly setup to connect through the browser, then taisly mcp to start the stdio MCP server.",

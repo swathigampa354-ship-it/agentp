@@ -14,6 +14,12 @@ Ajanınız içerik hazırlayabiliyor, paylaşım metni yazabiliyor veya kampanya
 
 ## Hızlı başlangıç
 
+Ücretsiz başlayın:
+
+- Paketi ücretsiz kurun.
+- Taisly'yi yapay zeka ajanınızdan bağlayın.
+- Yayınlama akışınız daha fazla ölçeğe ihtiyaç duyduğunda daha sonra yükseltin.
+
 Paketi kurun:
 
 ```bash

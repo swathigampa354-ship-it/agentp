@@ -14,6 +14,12 @@ Taisly Agent Kit ayuda a los agentes de IA a publicar videos cortos en redes soc
 
 ## Inicio rápido
 
+Empieza gratis:
+
+- Instala el paquete gratis.
+- Conecta Taisly desde tu agente de IA.
+- Cambia a un plan de pago más adelante, cuando tu flujo de publicación necesite más escala.
+
 Instala el paquete:
 
 ```bash

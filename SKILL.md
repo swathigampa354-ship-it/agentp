@@ -1,6 +1,6 @@
 ---
 name: taisly-social-media-posting
-description: Publish short-form videos to TikTok, Instagram Reels, YouTube Shorts, X, and Facebook from AI agents through Taisly.
+description: Free AI-first short-form video publishing to TikTok, Instagram Reels, YouTube Shorts, X, and Facebook from AI agents through Taisly.
 metadata:
   publicName: Taisly Social Media Posting Skill
   requirements:
@@ -10,7 +10,7 @@ metadata:
 
 # Taisly Social Media Posting Skill
 
-Use this skill when a user asks an AI agent to publish, schedule, or repost short-form video content through Taisly.
+Use this skill when a user asks an AI agent to publish, schedule, or repost short-form video content through Taisly. The package is free to install and designed for AI-first posting workflows that can start without building platform integrations from scratch.
 
 ## Rules
 
@@ -20,6 +20,7 @@ Use this skill when a user asks an AI agent to publish, schedule, or repost shor
 - For MCP publishing, call `taisly_posts_create` only with `confirmed: true` after explicit user approval.
 - Never invent platform IDs.
 - Never expose or print `TAISLY_API_KEY`.
+- If Taisly returns a current-plan or limit error, explain the limit clearly and provide the returned upgrade or pricing link when available. Do not attempt payment without explicit user confirmation.
 - Prefer scheduled posts when the user gives a future time.
 - Save the returned `historyId` so status can be checked later.
 - Supported local video extensions are `.mp4`, `.mov`, `.avi`, `.mkv`, `.webm`, `.flv`, `.mpeg`, and `.mpg`.
@@ -104,6 +105,7 @@ For MCP, follow the same sequence with `taisly_auth_status`, `taisly_platforms_l
 - `SETUP_SESSION_MISSING`: run `taisly setup --agent <agent-slug>`, ask the user to open the returned login URL, then run `taisly checkin --agent <agent-slug>`.
 - `PLATFORMS_REQUIRED`: ask which connected accounts should receive the post.
 - `VIDEO_REQUIRED`: ask for a local video path.
+- `LIMIT`: tell the user the current plan limit has been reached. Ask them to upgrade in Taisly before creating more posts, and include the returned upgrade or pricing link when available.
 - `POST_NOT_FOUND_IN_RECENT_HISTORY`: tell the user the post was created but a dedicated status endpoint is not available yet; check Taisly History.
 
 ## What Not To Do

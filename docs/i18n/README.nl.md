@@ -14,6 +14,12 @@ Gebruik het wanneer je agent al inhoud kan voorbereiden, publicatietekst kan sch
 
 ## Snel starten
 
+Gratis starten:
+
+- Installeer het pakket gratis.
+- Verbind Taisly vanuit je AI-agent.
+- Upgrade later wanneer je publicatieworkflow meer schaal nodig heeft.
+
 Installeer het pakket:
 
 ```bash
