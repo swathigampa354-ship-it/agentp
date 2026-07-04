@@ -57,6 +57,18 @@ async function run(commandName, options) {
     case "integrations:settings":
       return client.platforms.schema(options.platform || options._[0]);
 
+    case "platforms:connect:start":
+    case "integrations:connect:start":
+      return client.platforms.connectStart({
+        platform: options.platform || options._[0],
+      });
+
+    case "platforms:connect:check":
+    case "integrations:connect:check":
+      return client.platforms.connectCheck({
+        platform: options.platform || options._[0],
+      });
+
     case "posts:validate":
       return client.posts.validate({
         video: options.video,
@@ -115,6 +127,9 @@ function help() {
       "platforms:list",
       "integrations:list",
       "platforms:schema --platform TikTok",
+      "platforms:connect:start --platform instagram",
+      "platforms:connect:check --platform instagram",
+      "Supported connect slugs: instagram, tiktok, youtube, x, facebook",
       "posts:validate --video ./launch.mp4 --platforms <id,id> --description 'Launch day'",
       "posts:create --video ./launch.mp4 --platforms <id,id> --description 'Launch day' --scheduled 2026-06-14T09:00:00+07:00",
       "posts:create --json campaign.json",

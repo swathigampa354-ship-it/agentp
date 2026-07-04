@@ -111,6 +111,17 @@ taisly auth:status
 taisly platforms:list
 ```
 
+Connect a social account from an AI-agent flow:
+
+```bash
+taisly platforms:connect:start --platform instagram
+# Open the returned connectUrl and finish authorization in the browser.
+taisly platforms:connect:check --platform instagram
+taisly platforms:list
+```
+
+Supported connect slugs: `instagram`, `tiktok`, `youtube`, `x`, `facebook`.
+
 Validate a local video before publishing:
 
 ```bash
@@ -194,6 +205,8 @@ Available MCP tools:
 - `taisly_auth_status`
 - `taisly_platforms_list`
 - `taisly_platform_schema`
+- `taisly_platform_connect_start`
+- `taisly_platform_connect_check`
 - `taisly_posts_validate`
 - `taisly_posts_create`
 - `taisly_posts_status`

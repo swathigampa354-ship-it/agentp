@@ -10,7 +10,7 @@ const SUPPORTED_PROTOCOL_VERSIONS = new Set([
 ]);
 const SERVER_NAME = "taisly-agent-kit";
 const SERVER_TITLE = "Taisly Agent Kit";
-const SERVER_VERSION = "0.2.1";
+const SERVER_VERSION = "0.2.3";
 
 const JSON_OBJECT_SCHEMA = {
   type: "object",
@@ -90,6 +90,42 @@ const TOOLS = [
         platform: {
           type: "string",
           description: "Platform name, for example TikTok, Instagram, YouTube, X, or Facebook.",
+        },
+      },
+      required: ["platform"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "taisly_platform_connect_start",
+    title: "Start Social Account Connection",
+    description:
+      "Start browser-based connection for a social account. Returns a connectUrl that the user must open and approve in the browser.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        platform: {
+          type: "string",
+          description:
+            "Platform to connect. Supported: instagram, tiktok, youtube, x, facebook.",
+        },
+      },
+      required: ["platform"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "taisly_platform_connect_check",
+    title: "Check Social Account Connection",
+    description:
+      "Check whether a social account connection started by taisly_platform_connect_start has appeared in Taisly.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        platform: {
+          type: "string",
+          description:
+            "Platform to check. Supported: instagram, tiktok, youtube, x, facebook.",
         },
       },
       required: ["platform"],
@@ -249,6 +285,10 @@ const TOOL_HANDLERS = {
   taisly_auth_status: (client) => client.auth.status(),
   taisly_platforms_list: (client) => client.platforms.list(),
   taisly_platform_schema: (client, args) => client.platforms.schema(args.platform),
+  taisly_platform_connect_start: (client, args) =>
+    client.platforms.connectStart({ platform: args.platform }),
+  taisly_platform_connect_check: (client, args) =>
+    client.platforms.connectCheck({ platform: args.platform }),
   taisly_posts_validate: (client, args) =>
     client.posts.validate({
       video: args.video,
@@ -392,7 +432,7 @@ class TaislyMcpServer {
         version: SERVER_VERSION,
       },
       instructions:
-        "If Taisly is not connected yet, use taisly_agent_setup_start, send the user the returned loginUrl, wait for browser approval, then use taisly_agent_checkin. After setup, discover connected social accounts, validate posts, ask for explicit user confirmation, then create and monitor posts.",
+        "If Taisly is not connected yet, use taisly_agent_setup_start, send the user the returned loginUrl, wait for browser approval, then use taisly_agent_checkin. If a requested social account is missing, use taisly_platform_connect_start, send the user the returned connectUrl, wait for browser approval, then use taisly_platform_connect_check. After setup, discover connected social accounts, validate posts, ask for explicit user confirmation, then create and monitor posts.",
     };
   }
 

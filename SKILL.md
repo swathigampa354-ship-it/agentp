@@ -74,6 +74,8 @@ When the MCP server is connected, use these tools instead of shell commands:
 - `taisly_auth_status`
 - `taisly_platforms_list`
 - `taisly_platform_schema`
+- `taisly_platform_connect_start`
+- `taisly_platform_connect_check`
 - `taisly_posts_validate`
 - `taisly_posts_create`
 - `taisly_posts_status`
@@ -87,14 +89,15 @@ When the MCP server is connected, use these tools instead of shell commands:
 2. Wait for the user to finish browser login, then run `taisly_agent_checkin` or `taisly checkin --agent <agent-slug>`.
 3. Run `taisly auth:status`.
 4. Run `taisly platforms:list`.
-5. Match the user's requested platforms to connected platform IDs.
-6. Run `taisly platforms:schema --platform <name>` for constraints.
-7. Run `taisly posts:validate`.
-8. Confirm destination accounts and caption with the user.
-9. Run `taisly posts:create`.
-10. Report the returned `historyId`, scheduled date, and per-platform initial statuses.
+5. If a requested platform is missing and a connect tool is available, run `taisly platforms:connect:start --platform <name>`, give the user the returned `connectUrl`, wait for browser approval, then run `taisly platforms:connect:check --platform <name>`. Supported connect slugs are `instagram`, `tiktok`, `youtube`, `x`, and `facebook`.
+6. Match the user's requested platforms to connected platform IDs.
+7. Run `taisly platforms:schema --platform <name>` for constraints.
+8. Run `taisly posts:validate`.
+9. Confirm destination accounts and caption with the user.
+10. Run `taisly posts:create`.
+11. Report the returned `historyId`, scheduled date, and per-platform initial statuses.
 
-For MCP, follow the same sequence with `taisly_auth_status`, `taisly_platforms_list`, `taisly_platform_schema`, `taisly_posts_validate`, `taisly_posts_create`, and `taisly_posts_status`.
+For MCP, follow the same sequence with `taisly_auth_status`, `taisly_platforms_list`, `taisly_platform_connect_start`, `taisly_platform_connect_check`, `taisly_platform_schema`, `taisly_posts_validate`, `taisly_posts_create`, and `taisly_posts_status`.
 
 ## Error Handling
 

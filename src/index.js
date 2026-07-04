@@ -86,6 +86,34 @@ export class Taisly {
       success: true,
       data: getPlatformSchema(platform),
     }),
+
+    connectStart: async ({ platform }) => {
+      const platformKey = normalizeConnectPlatform(platform);
+      const response = await this.request(
+        `/agent/platform/connect/start?platform=${encodeURIComponent(
+          platformKey,
+        )}`,
+      );
+
+      return {
+        success: true,
+        ...(response.data || {}),
+      };
+    },
+
+    connectCheck: async ({ platform }) => {
+      const platformKey = normalizeConnectPlatform(platform);
+      const response = await this.request(
+        `/agent/platform/connect/check?platform=${encodeURIComponent(
+          platformKey,
+        )}`,
+      );
+
+      return {
+        success: true,
+        ...(response.data || {}),
+      };
+    },
   };
 
   posts = {
@@ -308,6 +336,18 @@ export function normalizePlatformIds(platforms) {
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function normalizeConnectPlatform(platform) {
+  const value = String(platform || "")
+    .trim()
+    .toLowerCase();
+
+  if (!value) {
+    throw new TaislyError("PLATFORM_REQUIRED", "Pass --platform.");
+  }
+
+  return value;
 }
 
 export function normalizeScheduled(value) {
