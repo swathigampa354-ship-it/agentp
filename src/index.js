@@ -51,7 +51,7 @@ export class Taisly {
     if (!response.ok || data?.success === false) {
       throw new TaislyError(
         data?.message || `HTTP_${response.status}`,
-        data?.error || response.statusText || "Taisly request failed",
+        getRequestErrorMessage(data, response),
         data,
       );
     }
@@ -258,9 +258,18 @@ export class TaislyError extends Error {
       success: false,
       code: this.code,
       message: this.message,
+      ...(this.details?.agent ? { agent: this.details.agent } : {}),
       ...(this.details ? { details: this.details } : {}),
     };
   }
+}
+
+function getRequestErrorMessage(data, response) {
+  if (data?.agent?.message) return data.agent.message;
+  if (data?.error) return data.error;
+  if (data?.detailMessage) return data.detailMessage;
+  if (data?.message) return data.message;
+  return response.statusText || "Taisly request failed";
 }
 
 export function getPlatformSchema(platform) {
