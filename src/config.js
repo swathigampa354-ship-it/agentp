@@ -33,21 +33,19 @@ export function readStoredCredential() {
   const config = readConfig();
   return {
     apiKey: config.apiKey,
-    apiUrl: config.apiUrl,
   };
 }
 
-export function saveCredential({ apiKey, apiUrl }) {
+export function saveCredential({ apiKey }) {
   const config = readConfig();
   writeConfig({
     ...config,
     apiKey,
-    apiUrl,
     updatedAt: new Date().toISOString(),
   });
 }
 
-export function savePendingSetup({ agent, checkinToken, loginUrl, expiresAt, apiUrl }) {
+export function savePendingSetup({ agent, checkinToken, loginUrl, expiresAt }) {
   const config = readConfig();
   const setup = {
     ...(config.setup || {}),
@@ -56,7 +54,6 @@ export function savePendingSetup({ agent, checkinToken, loginUrl, expiresAt, api
       checkinToken,
       loginUrl,
       expiresAt,
-      apiUrl,
       createdAt: new Date().toISOString(),
     },
   };

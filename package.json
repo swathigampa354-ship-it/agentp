@@ -1,6 +1,6 @@
 {
   "name": "@taisly/agent",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "AI agent social media posting SDK, CLI, Skill, and MCP server for publishing videos to TikTok, Instagram Reels, YouTube Shorts, X, and Facebook through Taisly.",
   "type": "module",
   "main": "src/index.js",

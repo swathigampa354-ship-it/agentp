@@ -1,16 +1,16 @@
-import { DEFAULT_API_URL, TaislyError, normalizeApiUrl } from "./index.js";
+import { TaislyError } from "./index.js";
 import {
   clearPendingSetup,
   readPendingSetup,
-  readStoredCredential,
   saveCredential,
   savePendingSetup,
 } from "./config.js";
 
+const PUBLIC_API_URL = "https://app.taisly.com/api";
+
 export async function setupAgent(options = {}) {
   const agent = getAgent(options);
-  const apiUrl = getPrivateApiUrl(options);
-  const data = await setupRequest(apiUrl, "/agent/setup/start", { agent });
+  const data = await setupRequest("/agent/setup/start", { agent });
   const setup = data.data || {};
   const setupAgentName = setup.agent || agent;
 
@@ -19,7 +19,6 @@ export async function setupAgent(options = {}) {
     checkinToken: setup.checkinToken,
     loginUrl: setup.loginUrl,
     expiresAt: setup.expiresAt,
-    apiUrl,
   });
 
   return {
@@ -37,7 +36,6 @@ export async function checkinAgent(options = {}) {
     ? {
         agent,
         checkinToken: options.checkinToken,
-        apiUrl: getPrivateApiUrl(options),
       }
     : readPendingSetup(agent);
 
@@ -48,17 +46,13 @@ export async function checkinAgent(options = {}) {
     );
   }
 
-  const apiUrl = getPrivateApiUrl({
-    ...options,
-    apiUrl: options.apiUrl || options["api-url"] || pendingSetup.apiUrl,
-  });
-  const data = await setupRequest(apiUrl, "/agent/setup/checkin", {
+  const data = await setupRequest("/agent/setup/checkin", {
     checkinToken: pendingSetup.checkinToken,
   });
   const result = data.data || {};
 
   if (result.status === "connected" && result.apiKey) {
-    saveCredential({ apiKey: result.apiKey, apiUrl });
+    saveCredential({ apiKey: result.apiKey });
     clearPendingSetup(agent);
 
     return {
@@ -110,8 +104,8 @@ export function getAgent(options = {}) {
   return value || "local-agent";
 }
 
-async function setupRequest(apiUrl, pathname, body) {
-  const response = await fetch(`${getPublicApiUrl(apiUrl)}${pathname}`, {
+async function setupRequest(pathname, body) {
+  const response = await fetch(`${PUBLIC_API_URL}${pathname}`, {
     method: "POST",
     body: JSON.stringify(body),
     headers: {
@@ -130,21 +124,6 @@ async function setupRequest(apiUrl, pathname, body) {
   }
 
   return data;
-}
-
-function getPrivateApiUrl(options = {}) {
-  const storedCredential = readStoredCredential();
-  return normalizeApiUrl(
-    options.apiUrl ||
-      options["api-url"] ||
-      process.env.TAISLY_API_URL ||
-      storedCredential.apiUrl ||
-      DEFAULT_API_URL,
-  );
-}
-
-function getPublicApiUrl(apiUrl) {
-  return apiUrl.endsWith("/private") ? apiUrl.slice(0, -8) : apiUrl;
 }
 
 function parseJson(text) {

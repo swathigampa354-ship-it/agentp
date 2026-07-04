@@ -27,7 +27,6 @@ Erstelle einen API-Schlüssel in den Taisly-Einstellungen und setze:
 
 ```bash
 export TAISLY_API_KEY="taisly_..."
-export TAISLY_API_URL="https://app.taisly.com/api/private"
 ```
 
 Verbundene Social-Media-Konten auflisten:

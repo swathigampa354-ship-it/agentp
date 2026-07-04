@@ -141,7 +141,6 @@ function help() {
     ],
     env: [
       "TAISLY_API_KEY",
-      "TAISLY_API_URL",
       "TAISLY_CONFIG_HOME",
     ],
     jsonInput:

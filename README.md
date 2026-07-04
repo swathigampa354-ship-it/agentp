@@ -97,10 +97,7 @@ Manual fallback: create an API key in [Taisly Settings](https://app.taisly.com/e
 
 ```bash
 export TAISLY_API_KEY="taisly_..."
-export TAISLY_API_URL="https://app.taisly.com/api/private"
 ```
-
-`TAISLY_API_URL` is optional unless you need to target a non-default Taisly API environment.
 
 ## Quick start
 

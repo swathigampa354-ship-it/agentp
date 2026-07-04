@@ -27,7 +27,6 @@ Maak een API-sleutel aan in de Taisly-instellingen en stel deze variabele in:
 
 ```bash
 export TAISLY_API_KEY="taisly_..."
-export TAISLY_API_URL="https://app.taisly.com/api/private"
 ```
 
 Toon de gekoppelde sociale accounts:

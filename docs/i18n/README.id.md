@@ -27,7 +27,6 @@ Buat kunci API di pengaturan Taisly, lalu atur:
 
 ```bash
 export TAISLY_API_KEY="taisly_..."
-export TAISLY_API_URL="https://app.taisly.com/api/private"
 ```
 
 Tampilkan akun sosial yang terhubung:

@@ -27,7 +27,6 @@ npx @taisly/agent help
 
 ```bash
 export TAISLY_API_KEY="taisly_..."
-export TAISLY_API_URL="https://app.taisly.com/api/private"
 ```
 
 列出已连接的社交账号：

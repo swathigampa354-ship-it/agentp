@@ -27,7 +27,6 @@ Créez une clé API dans les paramètres Taisly, puis définissez :
 
 ```bash
 export TAISLY_API_KEY="taisly_..."
-export TAISLY_API_URL="https://app.taisly.com/api/private"
 ```
 
 Listez les comptes sociaux connectés :

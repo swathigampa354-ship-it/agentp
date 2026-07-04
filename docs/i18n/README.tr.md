@@ -27,7 +27,6 @@ Taisly ayarlarında bir API anahtarı oluşturun ve şunu ayarlayın:
 
 ```bash
 export TAISLY_API_KEY="taisly_..."
-export TAISLY_API_URL="https://app.taisly.com/api/private"
 ```
 
 Bağlı sosyal hesapları listeleyin:

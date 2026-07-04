@@ -21,9 +21,7 @@ export class Taisly {
     const storedCredential = readStoredCredential();
     this.apiKey =
       options.apiKey || process.env.TAISLY_API_KEY || storedCredential.apiKey;
-    this.apiUrl = normalizeApiUrl(
-      options.apiUrl || process.env.TAISLY_API_URL || storedCredential.apiUrl,
-    );
+    this.apiUrl = DEFAULT_API_URL;
   }
 
   requireApiKey() {
@@ -398,8 +396,4 @@ function parseJson(text) {
   } catch (_) {
     return { success: false, message: "INVALID_JSON_RESPONSE", raw: text };
   }
-}
-
-export function normalizeApiUrl(value) {
-  return (value || DEFAULT_API_URL).replace(/\/$/, "");
 }

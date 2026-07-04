@@ -27,7 +27,6 @@ Taislyの設定でAPIキーを作成し、次を設定します。
 
 ```bash
 export TAISLY_API_KEY="taisly_..."
-export TAISLY_API_URL="https://app.taisly.com/api/private"
 ```
 
 接続済みソーシャルアカウントを表示します。
