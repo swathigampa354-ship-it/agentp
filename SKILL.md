@@ -45,6 +45,14 @@ Manual API key fallback:
 export TAISLY_API_KEY="taisly_..."
 ```
 
+Remote MCP endpoint:
+
+```txt
+https://app.taisly.com/mcp
+```
+
+Remote MCP can publish only from public `videoUrl` values. Use the local MCP server or CLI when the video is a local file path available to the agent.
+
 ## Commands
 
 ```bash

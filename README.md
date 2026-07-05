@@ -9,7 +9,7 @@ Free AI-first social media posting for short-form video. Taisly Agent Kit is a J
 
 Use it when your agent can create content, write captions, or prepare a campaign, but still needs a reliable video publishing API to put that content online. The package is free to install and designed to get an agent from idea to published video without building every platform integration yourself.
 
-[Website](https://taisly.com/en) | [Agent Kit](https://taisly.com/en/ai-agent-kit) | [API Docs](https://docs.taisly.com/en/docs) | [npm](https://www.npmjs.com/package/@taisly/agent) | [GitHub](https://github.com/taisly/agent) | [Glama](https://glama.ai/mcp/servers/taisly/agent) | [Guide](https://taisly.com/en/blog/ai-agent-social-media-posting-api)
+[Website](https://taisly.com/en) | [Agent Kit](https://taisly.com/en/ai-agent-kit) | [API Docs](https://docs.taisly.com/en/docs) | [npm](https://www.npmjs.com/package/@taisly/agent) | [GitHub](https://github.com/taisly/agent) | [MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.taisly%2Fagent) | [Glama](https://glama.ai/mcp/servers/taisly/agent) | [Guide](https://taisly.com/en/blog/ai-agent-social-media-posting-api)
 
 ## Languages
 
@@ -169,7 +169,38 @@ Every command prints JSON so agents can parse results without scraping terminal 
 
 ## MCP server
 
-Taisly Agent Kit includes a stdio MCP server in the same package. MCP clients can connect it with:
+Taisly is published in the official MCP Registry as:
+
+```txt
+io.github.taisly/agent
+```
+
+Display name: **Taisly Social Media Posting**
+
+Remote MCP endpoint:
+
+```txt
+https://app.taisly.com/mcp
+```
+
+The remote MCP server uses streamable HTTP and OAuth. Remote MCP tools can publish only from public `videoUrl` values because they cannot read local files from your machine.
+
+Codex remote MCP setup:
+
+```bash
+codex mcp add taisly --url https://app.taisly.com/mcp
+codex mcp login taisly
+```
+
+Claude Code remote MCP setup:
+
+```bash
+claude mcp add --transport http taisly https://app.taisly.com/mcp
+```
+
+Then ask Claude Code to verify the connection. If OAuth is needed, Claude Code can guide the browser login from the session. You can also authenticate explicitly with `claude mcp login taisly` if you want to complete the OAuth flow from the shell before using tools.
+
+Taisly Agent Kit also includes a local stdio MCP server in the same package. Use local MCP when your agent needs to read local video files:
 
 ```json
 {
@@ -199,7 +230,7 @@ claude mcp add taisly -- npx @taisly/agent mcp
 Then ask the agent:
 
 ```txt
-Use the Taisly MCP server you just added and run the Taisly agent setup start tool with agentId: "<agent-slug>".
+Use the local Taisly MCP server you just added and run the Taisly agent setup start tool with agentId: "<agent-slug>".
 
 Send me the login URL and wait for me to finish in the browser.
 Then run the Taisly agent checkin tool with agentId: "<agent-slug>".
@@ -334,7 +365,8 @@ The `examples/` folder includes copy-paste workflows for common coding agents:
 - `posts:create` uses the existing multipart `/post` API.
 - `posts:status` reads recent history because a single-post status endpoint is not available yet.
 - `posts:validate` is local preflight; final validation still happens in Taisly.
-- The MCP server currently uses stdio transport. Remote MCP transport is planned later.
+- Local MCP uses stdio transport. Remote MCP uses streamable HTTP at `https://app.taisly.com/mcp`.
+- Remote MCP requires public video URLs; use local MCP or the CLI for local video files.
 - Media upload reuse is planned later.
 
 ## Links
@@ -344,4 +376,5 @@ The `examples/` folder includes copy-paste workflows for common coding agents:
 - API docs: <https://docs.taisly.com/en/docs>
 - npm package: <https://www.npmjs.com/package/@taisly/agent>
 - GitHub repo: <https://github.com/taisly/agent>
+- MCP Registry: <https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.taisly%2Fagent>
 - SEO guide: <https://taisly.com/en/blog/ai-agent-social-media-posting-api>

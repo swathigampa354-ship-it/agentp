@@ -1,17 +1,41 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.taisly/agent",
-  "description": "Free AI-first Taisly MCP server for AI agent social media video publishing to TikTok, Instagram Reels, YouTube Shorts, X, and Facebook.",
+  "title": "Taisly Social Media Posting",
+  "description": "Publish videos to TikTok, Reels, Shorts, X, and Facebook through Taisly.",
+  "websiteUrl": "https://taisly.com/en/ai-agent-kit",
+  "icons": [
+    {
+      "src": "https://app.taisly.com/logo512.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    },
+    {
+      "src": "https://app.taisly.com/logo192.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "192x192"
+      ]
+    }
+  ],
   "repository": {
     "url": "https://github.com/taisly/agent",
     "source": "github"
   },
-  "version": "0.2.6",
+  "version": "0.2.7",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://app.taisly.com/mcp"
+    }
+  ],
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@taisly/agent",
-      "version": "0.2.6",
+      "version": "0.2.7",
       "transport": {
         "type": "stdio"
       },

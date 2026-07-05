@@ -10,12 +10,26 @@ const SUPPORTED_PROTOCOL_VERSIONS = new Set([
 ]);
 const SERVER_NAME = "taisly-agent-kit";
 const SERVER_TITLE = "Taisly Agent Kit";
-const SERVER_VERSION = "0.2.6";
+const SERVER_VERSION = "0.2.7";
 
 const JSON_OBJECT_SCHEMA = {
   type: "object",
   additionalProperties: true,
 };
+
+const READ_ONLY_TOOL_ANNOTATIONS = Object.freeze({
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+});
+
+const EXTERNAL_MUTATING_TOOL_ANNOTATIONS = Object.freeze({
+  readOnlyHint: false,
+  destructiveHint: false,
+  idempotentHint: false,
+  openWorldHint: true,
+});
 
 const TOOLS = [
   {
@@ -23,6 +37,7 @@ const TOOLS = [
     title: "Start Taisly Agent Setup",
     description:
       "Start browser-based Taisly authentication for an AI agent. Returns a loginUrl that the user must open and approve before checkin.",
+    annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
@@ -44,6 +59,7 @@ const TOOLS = [
     title: "Finish Taisly Agent Setup",
     description:
       "Finish setup after the user approves the loginUrl in the browser. Saves the local Taisly agent credential for later CLI and MCP calls.",
+    annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
@@ -64,6 +80,7 @@ const TOOLS = [
     name: "taisly_auth_status",
     title: "Taisly Auth Status",
     description: "Check whether the Taisly API key is valid and count connected social accounts.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {},
@@ -74,6 +91,7 @@ const TOOLS = [
     name: "taisly_platforms_list",
     title: "List Taisly Platforms",
     description: "List connected TikTok, Instagram, YouTube, X, Facebook, and other social accounts available to this API key.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {},
@@ -84,6 +102,7 @@ const TOOLS = [
     name: "taisly_platform_schema",
     title: "Get Platform Posting Schema",
     description: "Get local posting constraints for a destination platform before validating or creating a post.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
@@ -101,6 +120,7 @@ const TOOLS = [
     title: "Start Social Account Connection",
     description:
       "Start browser-based connection for a social account. Returns a connectUrl that the user must open and approve in the browser.",
+    annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
@@ -119,6 +139,7 @@ const TOOLS = [
     title: "Check Social Account Connection",
     description:
       "Check whether a social account connection started by taisly_platform_connect_start has appeared in Taisly.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
@@ -136,6 +157,7 @@ const TOOLS = [
     name: "taisly_posts_validate",
     title: "Validate Taisly Post",
     description: "Validate a local video path, destination platform IDs, caption, and optional schedule before publishing.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
@@ -167,6 +189,7 @@ const TOOLS = [
     name: "taisly_posts_create",
     title: "Create Taisly Post",
     description: "Publish or schedule a video post through Taisly after the user explicitly confirms the media, destinations, caption, and schedule.",
+    annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
@@ -206,6 +229,7 @@ const TOOLS = [
     name: "taisly_posts_status",
     title: "Get Taisly Post Status",
     description: "Fetch recent-history status for a Taisly post by historyId.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
@@ -225,6 +249,7 @@ const TOOLS = [
     name: "taisly_posts_list",
     title: "List Taisly Posts",
     description: "List recent Taisly post history for status checks and audits.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
@@ -248,6 +273,7 @@ const TOOLS = [
     name: "taisly_reposts_list",
     title: "List Taisly Reposts",
     description: "List configured repost automations for connected social accounts.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {},
@@ -258,6 +284,7 @@ const TOOLS = [
     name: "taisly_reposts_create",
     title: "Create Taisly Repost",
     description: "Create a repost automation from one connected account to one or more destination accounts.",
+    annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
