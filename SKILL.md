@@ -1,11 +1,27 @@
 ---
 name: taisly-social-media-posting
 description: Free AI-first short-form video publishing to TikTok, Instagram Reels, YouTube Shorts, X, and Facebook from AI agents through Taisly.
+version: 0.2.7
 metadata:
   publicName: Taisly Social Media Posting Skill
   requirements:
     binaries:
       - taisly
+  openclaw:
+    requires:
+      bins:
+        - taisly
+    primaryEnv: TAISLY_API_KEY
+    envVars:
+      - name: TAISLY_API_KEY
+        required: false
+        description: Optional Taisly API key. The browser setup flow can create a local credential instead.
+    homepage: https://github.com/taisly/agent
+    install:
+      - kind: node
+        package: "@taisly/agent"
+        bins:
+          - taisly
 ---
 
 # Taisly Social Media Posting Skill
