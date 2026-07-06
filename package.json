@@ -1,6 +1,6 @@
 {
   "name": "@taisly/agent",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Free AI-first agent kit for publishing short-form videos to TikTok, Instagram Reels, YouTube Shorts, X, and Facebook through Taisly.",
   "type": "module",
   "main": "src/index.js",
@@ -29,7 +29,6 @@
     "README.md",
     "server.json",
     "SKILL.md",
-    "skills",
     "src",
     "examples"
   ],

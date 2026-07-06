@@ -1,6 +1,6 @@
 {
   "name": "taisly-agent-kit",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Publish short-form videos to TikTok, Instagram Reels, YouTube Shorts, X, and Facebook from Codex through Taisly.",
   "author": {
     "name": "Taisly",
@@ -22,7 +22,7 @@
     "instagram-reels",
     "youtube-shorts"
   ],
-  "skills": "./skills",
+  "skills": "./SKILL.md",
   "mcpServers": {
     "taisly": {
       "type": "http",

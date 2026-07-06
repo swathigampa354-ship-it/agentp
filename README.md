@@ -63,13 +63,13 @@ The skill tells agents to discover connected accounts, validate the post, ask fo
 
 ## Codex plugin
 
-This package includes a Codex plugin manifest in `.codex-plugin/plugin.json`. The plugin bundles the Taisly Social Media Posting skill and the official remote MCP server:
+This package includes a Codex plugin manifest in `.codex-plugin/plugin.json`. The plugin points Codex to the canonical `SKILL.md` file and the official remote MCP server:
 
 ```txt
 https://app.taisly.com/mcp
 ```
 
-Use the plugin when you want Codex to discover both the posting workflow instructions and the Taisly MCP tools from one package.
+Use the plugin when you want Codex to discover both the posting workflow instructions and the Taisly MCP tools from one package. The root `SKILL.md` is the single source of truth for the agent workflow.
 
 ## Install
 
