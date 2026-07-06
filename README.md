@@ -51,7 +51,7 @@ No credit card is required to get started. Paid plans are for teams and workflow
 
 ## Agent Skill
 
-This package includes the **Taisly Social Media Posting Skill** in `SKILL.md`. Use it with Claude Code, Codex, Cursor, OpenClaw, and custom agents when you want the agent to understand the safe posting workflow before it touches live social accounts.
+This package includes the **Taisly Social Media Posting Skill** in `SKILL.md`. Use it with Claude Code, Codex, Cursor, OpenClaw, and other agents when you want the agent to understand the safe posting workflow before it touches live social accounts.
 
 Recommended skill workflow:
 
@@ -60,6 +60,16 @@ auth -> platforms -> validate -> confirm -> create -> status
 ```
 
 The skill tells agents to discover connected accounts, validate the post, ask for explicit user confirmation, create the post, and save the returned `historyId` for status checks.
+
+## Codex plugin
+
+This package includes a Codex plugin manifest in `.codex-plugin/plugin.json`. The plugin bundles the Taisly Social Media Posting skill and the official remote MCP server:
+
+```txt
+https://app.taisly.com/mcp
+```
+
+Use the plugin when you want Codex to discover both the posting workflow instructions and the Taisly MCP tools from one package.
 
 ## Install
 
@@ -334,7 +344,7 @@ Taisly Agent Kit is designed for agentic workflows where the user gives a high-l
 - Codex: let a coding agent publish demo videos, launch clips, or build updates after user confirmation.
 - Claude Code: add social posting to local content workflows and campaign scripts.
 - Cursor: ship video publishing from developer tools, content apps, and internal automation.
-- OpenClaw and custom agents: connect planning, caption writing, and posting execution through a single CLI.
+- OpenClaw and other agents: connect planning, caption writing, and posting execution through a single CLI.
 
 Recommended agent path:
 

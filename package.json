@@ -20,6 +20,7 @@
     "taisly": "src/cli.js"
   },
   "files": [
+    ".codex-plugin",
     ".claude-plugin",
     "assets",
     "docs",
@@ -28,6 +29,7 @@
     "README.md",
     "server.json",
     "SKILL.md",
+    "skills",
     "src",
     "examples"
   ],
@@ -46,6 +48,9 @@
     "mcp",
     "mcp-server",
     "model-context-protocol",
+    "codex-plugin",
+    "codex-skills",
+    "openai-codex",
     "claude-plugin",
     "video-publishing",
     "video-publishing-api",
