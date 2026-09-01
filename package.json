@@ -1,17 +1,17 @@
 {
-  "name": "@taisly/agent",
+  "name": "@swathigampa354-ship-it/agentp",
   "version": "0.2.8",
-  "description": "Free AI-first agent kit for publishing short-form videos to TikTok, Instagram Reels, YouTube Shorts, X, and Facebook through Taisly.",
+  "description": "TikTok-only agent kit for publishing and scheduling short-form videos through Taisly.",
   "type": "module",
   "main": "src/index.js",
-  "mcpName": "io.github.taisly/agent",
-  "homepage": "https://taisly.com/en/ai-agent-kit",
+  "mcpName": "io.github.swathigampa354-ship-it/agentp",
+  "homepage": "https://github.com/swathigampa354-ship-it/agentp",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/taisly/agent.git"
+    "url": "git+https://github.com/swathigampa354-ship-it/agentp.git"
   },
   "bugs": {
-    "url": "https://github.com/taisly/agent/issues"
+    "url": "https://github.com/swathigampa354-ship-it/agentp/issues"
   },
   "exports": {
     ".": "./src/index.js"
@@ -22,7 +22,6 @@
   "files": [
     ".codex-plugin",
     ".claude-plugin",
-    "assets",
     "docs",
     "glama.json",
     "LICENSE",
@@ -36,34 +35,19 @@
     "check": "node --check src/config.js && node --check src/setup.js && node --check src/index.js && node --check src/cli.js && node --check src/mcp.js"
   },
   "keywords": [
-    "taisly",
-    "taisly-agent-kit",
-    "free-ai-agent-tools",
-    "ai-agent-social-media-posting",
+    "tiktok",
+    "tiktok-api",
+    "tiktok-automation",
+    "tiktok-scheduler",
+    "tiktok-publishing",
+    "video-publishing",
+    "short-form-video",
     "ai-agents",
     "ai-agent-tools",
-    "agent-skills",
     "agentic-workflows",
     "mcp",
     "mcp-server",
     "model-context-protocol",
-    "codex-plugin",
-    "codex-skills",
-    "openai-codex",
-    "claude-plugin",
-    "video-publishing",
-    "video-publishing-api",
-    "social-media",
-    "social-media-automation",
-    "tiktok-api",
-    "tiktok",
-    "instagram-automation",
-    "instagram-reels",
-    "youtube-shorts-publishing",
-    "youtube-shorts",
-    "x",
-    "facebook",
-    "automation",
     "codex",
     "claude-code",
     "cursor",

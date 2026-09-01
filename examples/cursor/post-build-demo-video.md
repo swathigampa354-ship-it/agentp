@@ -1,23 +1,23 @@
-# Cursor Recipe: Post A Build Demo Video
+# Cursor Recipe: Post A Build Demo Video To TikTok
 
-Use this recipe when a developer asks Cursor to publish a build/demo video after shipping a feature.
+Use this recipe when a developer asks Cursor to publish a build/demo video to TikTok after shipping a feature.
 
 ## Prompt Shape
 
 ```txt
-Use Taisly to post ./assets/build-demo.mp4 to my connected X and YouTube Shorts accounts.
+Use this TikTok-only tool to post ./assets/build-demo.mp4 to my connected TikTok account.
 Use a short caption that mentions the feature shipped today.
 ```
 
 ## Steps
 
-1. Check that Taisly credentials are available.
+1. Check that credentials are available.
 
 ```bash
 taisly auth:status
 ```
 
-2. List connected accounts and choose the requested destinations.
+2. List connected TikTok accounts and choose the requested destination.
 
 ```bash
 taisly platforms:list
@@ -28,8 +28,8 @@ taisly platforms:list
 ```json
 {
   "video": "./assets/build-demo.mp4",
-  "platforms": ["x_platform_id", "youtube_platform_id"],
-  "description": "Shipped today: a faster workflow for publishing short-form videos."
+  "platforms": ["tiktok_platform_id"],
+  "description": "Shipped today: a faster workflow for publishing TikTok videos."
 }
 ```
 

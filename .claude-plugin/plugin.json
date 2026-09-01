@@ -1,14 +1,14 @@
 {
-  "name": "taisly-agent-kit",
-  "description": "Free AI-first short-form video publishing for TikTok, Instagram Reels, YouTube Shorts, X, and Facebook from Claude Code through Taisly.",
+  "name": "tiktok-only-agent-kit",
+  "description": "TikTok-only short-form video publishing from Claude Code through this Taisly Agent Kit fork.",
   "version": "0.2.8",
   "author": {
-    "name": "Taisly"
+    "name": "Taisly fork"
   },
-  "homepage": "https://github.com/taisly/agent",
+  "homepage": "https://github.com/swathigampa354-ship-it/agentp",
   "repository": {
     "type": "git",
-    "url": "https://github.com/taisly/agent.git"
+    "url": "https://github.com/swathigampa354-ship-it/agentp.git"
   },
   "license": "MIT"
 }

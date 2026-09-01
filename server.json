@@ -1,36 +1,18 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.taisly/agent",
-  "title": "Taisly Social Media Posting",
-  "description": "Publish videos to TikTok, Reels, Shorts, X, and Facebook through Taisly.",
-  "websiteUrl": "https://taisly.com/en/ai-agent-kit",
-  "icons": [
-    {
-      "src": "https://app.taisly.com/logo512.png",
-      "mimeType": "image/png",
-      "sizes": ["512x512"]
-    },
-    {
-      "src": "https://app.taisly.com/logo192.png",
-      "mimeType": "image/png",
-      "sizes": ["192x192"]
-    }
-  ],
+  "name": "io.github.swathigampa354-ship-it/agentp",
+  "title": "TikTok-only Social Media Posting",
+  "description": "Publish and schedule TikTok videos through this TikTok-only Taisly Agent Kit fork.",
+  "websiteUrl": "https://github.com/swathigampa354-ship-it/agentp",
   "repository": {
-    "url": "https://github.com/taisly/agent",
+    "url": "https://github.com/swathigampa354-ship-it/agentp",
     "source": "github"
   },
   "version": "0.2.8",
-  "remotes": [
-    {
-      "type": "streamable-http",
-      "url": "https://app.taisly.com/mcp"
-    }
-  ],
   "packages": [
     {
       "registryType": "npm",
-      "identifier": "@taisly/agent",
+      "identifier": "@swathigampa354-ship-it/agentp",
       "version": "0.2.8",
       "transport": {
         "type": "stdio"

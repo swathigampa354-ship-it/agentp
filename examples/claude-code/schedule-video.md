@@ -1,27 +1,26 @@
-# Claude Code Recipe: Schedule A Video Post
+# Claude Code Recipe: Schedule A TikTok Video Post
 
-Use this recipe when the user asks Claude Code to schedule a short-form video through Taisly.
+Use this recipe when the user asks Claude Code to schedule a short-form video to TikTok through this fork.
 
 ## Prompt Shape
 
 ```txt
-Schedule ./demo.mp4 for tomorrow at 9 AM Bangkok time on my Instagram Reels and TikTok accounts.
+Schedule ./demo.mp4 for tomorrow at 9 AM Bangkok time on my connected TikTok account.
 Caption: "A quick demo of what shipped today."
 ```
 
 ## Steps
 
-1. Discover connected accounts.
+1. Discover connected TikTok accounts.
 
 ```bash
 taisly platforms:list
 ```
 
-2. Inspect constraints for the target platforms.
+2. Inspect TikTok constraints.
 
 ```bash
 taisly platforms:schema --platform TikTok
-taisly platforms:schema --platform Instagram
 ```
 
 3. Convert the requested time to an explicit ISO timestamp.
@@ -29,7 +28,7 @@ taisly platforms:schema --platform Instagram
 ```json
 {
   "video": "./demo.mp4",
-  "platforms": ["instagram_platform_id", "tiktok_platform_id"],
+  "platforms": ["tiktok_platform_id"],
   "description": "A quick demo of what shipped today.",
   "scheduled": "2026-06-14T09:00:00+07:00"
 }
@@ -41,7 +40,7 @@ taisly platforms:schema --platform Instagram
 taisly posts:validate --json ./campaign.json
 ```
 
-5. Create the scheduled post after confirmation.
+5. Create the scheduled TikTok post after confirmation.
 
 ```bash
 taisly posts:create --json ./campaign.json
@@ -51,6 +50,6 @@ taisly posts:create --json ./campaign.json
 
 ## Safety
 
-- Always show the exact destination account names/IDs before scheduling.
+- Always show the exact TikTok account name/ID before scheduling.
 - Do not silently change timezone.
 - If the date is ambiguous, ask the user before creating the post.

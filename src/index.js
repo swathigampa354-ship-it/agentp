@@ -3,6 +3,7 @@ import path from "node:path";
 import { readStoredCredential } from "./config.js";
 
 export const DEFAULT_API_URL = "https://app.taisly.com/api/private";
+export const ONLY_SUPPORTED_PLATFORM = "TikTok";
 const DEFAULT_HISTORY_PAGE = 1;
 const VIDEO_MIME_BY_EXTENSION = {
   ".mp4": "video/mp4",
@@ -59,24 +60,62 @@ export class Taisly {
     return data;
   }
 
+  async getAllPlatforms() {
+    const response = await this.request("/platform/platforms");
+    return normalizePlatforms(response.data || []);
+  }
+
+  async getTikTokPlatforms() {
+    const platforms = await this.getAllPlatforms();
+    return platforms.filter(isTikTokPlatform);
+  }
+
+  async assertTikTokPlatformIds(platformIds) {
+    const tikTokPlatforms = await this.getTikTokPlatforms();
+    const allowedIds = new Set(tikTokPlatforms.map((platform) => platform.id));
+    const unsupportedIds = platformIds.filter((id) => !allowedIds.has(String(id)));
+
+    if (unsupportedIds.length > 0) {
+      throw new TaislyError(
+        "TIKTOK_PLATFORM_ID_REQUIRED",
+        "Only connected TikTok platform IDs are supported by this tool.",
+        {
+          unsupportedIds,
+          supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+          tikTokPlatformIds: tikTokPlatforms.map((platform) => platform.id),
+        },
+      );
+    }
+
+    return tikTokPlatforms.filter((platform) => platformIds.includes(platform.id));
+  }
+
   auth = {
     status: async () => {
-      const response = await this.request("/platform/platforms");
+      const platforms = await this.getAllPlatforms();
+      const tikTokPlatforms = platforms.filter(isTikTokPlatform);
+
       return {
         success: true,
         authenticated: true,
-        platformCount: response.data?.length || 0,
+        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+        platformCount: tikTokPlatforms.length,
+        totalConnectedPlatformCount: platforms.length,
       };
     },
   };
 
   platforms = {
     list: async () => {
-      const response = await this.request("/platform/platforms");
+      const platforms = await this.getAllPlatforms();
+      const tikTokPlatforms = platforms.filter(isTikTokPlatform);
+
       return {
         success: true,
-        count: response.data?.length || 0,
-        data: normalizePlatforms(response.data || []),
+        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+        count: tikTokPlatforms.length,
+        totalConnectedPlatformCount: platforms.length,
+        data: tikTokPlatforms,
       };
     },
 
@@ -95,6 +134,7 @@ export class Taisly {
 
       return {
         success: true,
+        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
         ...(response.data || {}),
       };
     },
@@ -109,6 +149,7 @@ export class Taisly {
 
       return {
         success: true,
+        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
         ...(response.data || {}),
       };
     },
@@ -123,7 +164,7 @@ export class Taisly {
 
       const platformIds = normalizePlatformIds(platforms);
       if (platformIds.length === 0) {
-        throw new TaislyError("PLATFORMS_REQUIRED", "Pass at least one platform id.");
+        throw new TaislyError("PLATFORMS_REQUIRED", "Pass at least one TikTok platform id.");
       }
 
       const fileInfo = await stat(video);
@@ -140,14 +181,18 @@ export class Taisly {
         );
       }
 
+      const tikTokPlatforms = await this.assertTikTokPlatformIds(platformIds);
+
       return {
         success: true,
+        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
         data: {
           video,
           filename: path.basename(video),
           sizeBytes: fileInfo.size,
           sizeMb: Number((fileInfo.size / 1024 / 1024).toFixed(2)),
           platforms: platformIds,
+          platformDetails: tikTokPlatforms,
           descriptionLength: description.length,
           scheduled: scheduled ? normalizeScheduled(scheduled) : null,
         },
@@ -188,18 +233,20 @@ export class Taisly {
       if (!historyId) throw new TaislyError("POST_ID_REQUIRED", "Pass a post id.");
 
       const response = await this.request("/post/history?page=1");
-      const post = (response.data || []).find((item) => item.id === historyId);
+      const tikTokHistory = filterPostHistoryForTikTok(response.data || []);
+      const post = tikTokHistory.find((item) => item.id === historyId);
 
       if (!post) {
         throw new TaislyError(
-          "POST_NOT_FOUND_IN_RECENT_HISTORY",
-          "Taisly does not expose a single-post status endpoint yet; recent history did not include this id.",
-          { historyId },
+          "POST_NOT_FOUND_IN_RECENT_TIKTOK_HISTORY",
+          "Recent TikTok-only history did not include this id.",
+          { historyId, supportedPlatform: ONLY_SUPPORTED_PLATFORM },
         );
       }
 
       return {
         success: true,
+        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
         data: post,
       };
     },
@@ -211,22 +258,27 @@ export class Taisly {
       if (endTime) params.set("endTime", String(endTime));
 
       const response = await this.request(`/post/history?${params.toString()}`);
+      const tikTokHistory = filterPostHistoryForTikTok(response.data || []);
+
       return {
         success: true,
+        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
         page: Number(page),
-        count: response.data?.length || 0,
-        data: response.data || [],
+        count: tikTokHistory.length,
+        data: tikTokHistory,
       };
     },
   };
 
   reposts = {
     create: async ({ from, to }) => {
-      if (!from) throw new TaislyError("REPOST_FROM_REQUIRED", "Pass --from.");
+      if (!from) throw new TaislyError("REPOST_FROM_REQUIRED", "Pass --from with a TikTok platform id.");
       const toList = normalizePlatformIds(to);
       if (toList.length === 0) {
-        throw new TaislyError("REPOST_TO_REQUIRED", "Pass at least one destination.");
+        throw new TaislyError("REPOST_TO_REQUIRED", "Pass at least one TikTok destination.");
       }
+
+      await this.assertTikTokPlatformIds([String(from), ...toList]);
 
       return this.request("/repost/add", {
         method: "POST",
@@ -237,9 +289,12 @@ export class Taisly {
 
     list: async () => {
       const response = await this.request("/reposts");
+      const reposts = filterRepostsForTikTok(response.data || []);
+
       return {
         success: true,
-        data: response.data || [],
+        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+        data: reposts,
       };
     },
   };
@@ -272,10 +327,19 @@ function getRequestErrorMessage(data, response) {
   return response.statusText || "Taisly request failed";
 }
 
-export function getPlatformSchema(platform) {
-  const normalized = String(platform || "").toLowerCase();
-  const base = {
-    platform: platform || "video",
+export function getPlatformSchema(platform = ONLY_SUPPORTED_PLATFORM) {
+  const normalized = String(platform || ONLY_SUPPORTED_PLATFORM).toLowerCase();
+
+  if (normalized !== "tiktok") {
+    throw new TaislyError(
+      "UNSUPPORTED_PLATFORM",
+      "Only TikTok is supported by this tool.",
+      { requestedPlatform: platform, supportedPlatform: ONLY_SUPPORTED_PLATFORM },
+    );
+  }
+
+  return {
+    platform: ONLY_SUPPORTED_PLATFORM,
     media: {
       type: "video",
       maxSizeMb: 500,
@@ -287,40 +351,15 @@ export function getPlatformSchema(platform) {
       description: {
         type: "string",
         required: true,
-        maxLength: normalized === "x" ? 100 : 2200,
+        maxLength: 2200,
       },
       scheduled: {
         type: "unix_ms_or_iso_datetime",
         required: false,
       },
     },
+    notes: ["Keep captions concise and validate commercial/music rights."],
   };
-
-  if (normalized === "youtube" || normalized === "youtube shorts") {
-    return {
-      ...base,
-      platform: "YouTube",
-      notes: ["Use vertical videos for Shorts-style distribution."],
-    };
-  }
-
-  if (normalized === "tiktok") {
-    return {
-      ...base,
-      platform: "TikTok",
-      notes: ["Keep captions concise and validate commercial/music rights."],
-    };
-  }
-
-  if (normalized === "instagram") {
-    return {
-      ...base,
-      platform: "Instagram",
-      notes: ["Use 9:16 video for Reels."],
-    };
-  }
-
-  return base;
 }
 
 export async function readJsonFile(filepath) {
@@ -338,7 +377,7 @@ export async function readJsonFile(filepath) {
 
 export function normalizePlatformIds(platforms) {
   if (!platforms) return [];
-  if (Array.isArray(platforms)) return platforms.filter(Boolean);
+  if (Array.isArray(platforms)) return platforms.map(String).filter(Boolean);
   return String(platforms)
     .split(",")
     .map((item) => item.trim())
@@ -351,7 +390,15 @@ function normalizeConnectPlatform(platform) {
     .toLowerCase();
 
   if (!value) {
-    throw new TaislyError("PLATFORM_REQUIRED", "Pass --platform.");
+    throw new TaislyError("PLATFORM_REQUIRED", "Pass --platform tiktok.");
+  }
+
+  if (value !== "tiktok") {
+    throw new TaislyError(
+      "UNSUPPORTED_PLATFORM",
+      "Only TikTok account connections are supported by this tool.",
+      { requestedPlatform: platform, supportedPlatform: ONLY_SUPPORTED_PLATFORM },
+    );
   }
 
   return value;
@@ -380,15 +427,46 @@ function normalizePlatforms(platforms) {
   }));
 }
 
+function isTikTokPlatform(platform) {
+  const value = String(platform?.platform || platform?.identifier || "")
+    .trim()
+    .toLowerCase();
+
+  return value === "tiktok";
+}
+
+function filterPostHistoryForTikTok(history) {
+  return history
+    .map((post) => {
+      const result = filterTikTokResults(post.result || []);
+      return { ...post, result };
+    })
+    .filter((post) => post.result.length > 0);
+}
+
+function filterTikTokResults(results) {
+  return results.filter(isTikTokPlatform);
+}
+
+function filterRepostsForTikTok(reposts) {
+  return reposts
+    .map((repost) => ({
+      ...repost,
+      to: (repost.to || []).filter(isTikTokPlatform),
+    }))
+    .filter((repost) => isTikTokPlatform(repost.from) && repost.to.length > 0);
+}
+
 function normalizePostCreateResponse(response) {
   const historyId = response.historyId || response.id || response.data?.id;
 
   return {
     success: true,
+    supportedPlatform: ONLY_SUPPORTED_PLATFORM,
     historyId: historyId ? String(historyId) : undefined,
     scheduled: Boolean(response.scheduled),
     date: response.date,
-    result: response.result || [],
+    result: filterTikTokResults(response.result || []),
     raw: response,
   };
 }

@@ -9,7 +9,7 @@ const SUPPORTED_PROTOCOL_VERSIONS = new Set([
   "2024-11-05",
 ]);
 const SERVER_NAME = "taisly-agent-kit";
-const SERVER_TITLE = "Taisly Agent Kit";
+const SERVER_TITLE = "TikTok-only Taisly Agent Kit";
 const SERVER_VERSION = "0.2.8";
 
 const JSON_OBJECT_SCHEMA = {
@@ -44,7 +44,7 @@ const TOOLS = [
         agent: {
           type: "string",
           description:
-            "Short agent slug, for example claude-code, codex, cursor, openclaw, or hermes-agent.",
+            "Short agent slug, for example claude-code, codex, cursor, openclaw, or local-agent.",
         },
         agentId: {
           type: "string",
@@ -79,7 +79,7 @@ const TOOLS = [
   {
     name: "taisly_auth_status",
     title: "Taisly Auth Status",
-    description: "Check whether the Taisly API key is valid and count connected social accounts.",
+    description: "Check whether the Taisly API key is valid and count connected TikTok accounts.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -90,7 +90,7 @@ const TOOLS = [
   {
     name: "taisly_platforms_list",
     title: "List Taisly Platforms",
-    description: "List connected TikTok, Instagram, YouTube, X, Facebook, and other social accounts available to this API key.",
+    description: "List connected TikTok accounts available to this API key. Non-TikTok accounts are filtered out.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -108,7 +108,7 @@ const TOOLS = [
       properties: {
         platform: {
           type: "string",
-          description: "Platform name, for example TikTok, Instagram, YouTube, X, or Facebook.",
+          description: "Platform name. Only TikTok is supported.",
         },
       },
       required: ["platform"],
@@ -127,7 +127,7 @@ const TOOLS = [
         platform: {
           type: "string",
           description:
-            "Platform to connect. Supported: instagram, tiktok, youtube, x, facebook.",
+            "Platform to connect. Only supported value: tiktok.",
         },
       },
       required: ["platform"],
@@ -146,7 +146,7 @@ const TOOLS = [
         platform: {
           type: "string",
           description:
-            "Platform to check. Supported: instagram, tiktok, youtube, x, facebook.",
+            "Platform to check. Only supported value: tiktok.",
         },
       },
       required: ["platform"],
@@ -156,7 +156,7 @@ const TOOLS = [
   {
     name: "taisly_posts_validate",
     title: "Validate Taisly Post",
-    description: "Validate a local video path, destination platform IDs, caption, and optional schedule before publishing.",
+    description: "Validate a local video path, TikTok platform IDs, caption, and optional schedule before publishing.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -170,7 +170,7 @@ const TOOLS = [
             { type: "array", items: { type: "string" } },
             { type: "string" },
           ],
-          description: "Destination platform IDs from taisly_platforms_list.",
+          description: "TikTok platform IDs from taisly_platforms_list.",
         },
         description: {
           type: "string",
@@ -188,7 +188,7 @@ const TOOLS = [
   {
     name: "taisly_posts_create",
     title: "Create Taisly Post",
-    description: "Publish or schedule a video post through Taisly after the user explicitly confirms the media, destinations, caption, and schedule.",
+    description: "Publish or schedule a TikTok video post through Taisly after the user explicitly confirms the media, TikTok accounts, caption, and schedule.",
     annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -202,7 +202,7 @@ const TOOLS = [
             { type: "array", items: { type: "string" } },
             { type: "string" },
           ],
-          description: "Destination platform IDs from taisly_platforms_list.",
+          description: "TikTok platform IDs from taisly_platforms_list.",
         },
         description: {
           type: "string",
@@ -272,7 +272,7 @@ const TOOLS = [
   {
     name: "taisly_reposts_list",
     title: "List Taisly Reposts",
-    description: "List configured repost automations for connected social accounts.",
+    description: "List configured repost automations for connected TikTok accounts.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -283,21 +283,21 @@ const TOOLS = [
   {
     name: "taisly_reposts_create",
     title: "Create Taisly Repost",
-    description: "Create a repost automation from one connected account to one or more destination accounts.",
+    description: "Create a repost automation between connected TikTok accounts only.",
     annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
       properties: {
         from: {
           type: "string",
-          description: "Source platform ID.",
+          description: "Source TikTok platform ID.",
         },
         to: {
           oneOf: [
             { type: "array", items: { type: "string" } },
             { type: "string" },
           ],
-          description: "Destination platform IDs.",
+          description: "Destination TikTok platform IDs.",
         },
       },
       required: ["from", "to"],
@@ -327,7 +327,7 @@ const TOOL_HANDLERS = {
     if (args.confirmed !== true) {
       throw new TaislyError(
         "CONFIRMATION_REQUIRED",
-        "Set confirmed to true only after the user explicitly approves the video, destination accounts, caption, and schedule.",
+        "Set confirmed to true only after the user explicitly approves the video, TikTok accounts, caption, and schedule.",
         { required: { confirmed: true } },
       );
     }
@@ -459,7 +459,7 @@ class TaislyMcpServer {
         version: SERVER_VERSION,
       },
       instructions:
-        "If Taisly is not connected yet, use taisly_agent_setup_start, send the user the returned loginUrl, wait for browser approval, then use taisly_agent_checkin. If a requested social account is missing, use taisly_platform_connect_start, send the user the returned connectUrl, wait for browser approval, then use taisly_platform_connect_check. After setup, discover connected social accounts, validate posts, ask for explicit user confirmation, then create and monitor posts.",
+        "If Taisly is not connected yet, use taisly_agent_setup_start, send the user the returned loginUrl, wait for browser approval, then use taisly_agent_checkin. If a TikTok account is missing, use taisly_platform_connect_start with platform tiktok, send the user the returned connectUrl, wait for browser approval, then use taisly_platform_connect_check. After setup, discover connected TikTok accounts, validate posts, ask for explicit user confirmation, then create and monitor TikTok posts. This fork supports TikTok only.",
     };
   }
 

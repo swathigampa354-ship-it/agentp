@@ -55,18 +55,18 @@ async function run(commandName, options) {
     case "platforms:schema":
     case "integrations:schema":
     case "integrations:settings":
-      return client.platforms.schema(options.platform || options._[0]);
+      return client.platforms.schema(options.platform || options._[0] || "TikTok");
 
     case "platforms:connect:start":
     case "integrations:connect:start":
       return client.platforms.connectStart({
-        platform: options.platform || options._[0],
+        platform: options.platform || options._[0] || "tiktok",
       });
 
     case "platforms:connect:check":
     case "integrations:connect:check":
       return client.platforms.connectCheck({
-        platform: options.platform || options._[0],
+        platform: options.platform || options._[0] || "tiktok",
       });
 
     case "posts:validate":
@@ -120,6 +120,7 @@ async function run(commandName, options) {
 function help() {
   return {
     success: true,
+    supportedPlatform: "TikTok",
     commands: [
       "auth:status",
       "setup --agent <agent>",
@@ -127,23 +128,22 @@ function help() {
       "platforms:list",
       "integrations:list",
       "platforms:schema --platform TikTok",
-      "platforms:connect:start --platform instagram",
-      "platforms:connect:check --platform instagram",
-      "Supported connect slugs: instagram, tiktok, youtube, x, facebook",
-      "posts:validate --video ./launch.mp4 --platforms <id,id> --description 'Launch day'",
-      "posts:create --video ./launch.mp4 --platforms <id,id> --description 'Launch day' --scheduled 2026-06-14T09:00:00+07:00",
+      "platforms:connect:start --platform tiktok",
+      "platforms:connect:check --platform tiktok",
+      "posts:validate --video ./launch.mp4 --platforms <tiktok_id,tiktok_id> --description 'Launch day'",
+      "posts:create --video ./launch.mp4 --platforms <tiktok_id,tiktok_id> --description 'Launch day' --scheduled 2026-06-14T09:00:00+07:00",
       "posts:create --json campaign.json",
       "posts:list --page 1",
       "posts:status --id <historyId>",
       "reposts:list",
-      "reposts:create --from <platformId> --to <platformId,platformId>",
+      "reposts:create --from <tiktokPlatformId> --to <tiktokPlatformId,tiktokPlatformId>",
       "mcp",
     ],
     env: [
       "TAISLY_API_KEY",
     ],
     jsonInput:
-      "Pass --json file.json or --input file.json to load command options from a JSON file. Run taisly setup to connect through the browser, then taisly mcp to start the stdio MCP server.",
+      "Pass --json file.json or --input file.json to load command options from a JSON file. Run taisly setup to connect through the browser, then taisly mcp to start the stdio MCP server. This fork accepts TikTok platform IDs only.",
   };
 }
 
