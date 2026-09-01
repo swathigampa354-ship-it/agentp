@@ -1,6 +1,6 @@
 {
-  "name": "tiktok-only-agent-kit",
-  "description": "TikTok-only short-form video publishing from Claude Code through this Taisly Agent Kit fork.",
+  "name": "tiktok-account-posting-agent-kit",
+  "description": "TikTok account video publishing from Claude Code through this simplified Taisly Agent Kit fork.",
   "version": "0.2.8",
   "author": {
     "name": "Taisly fork"

@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.swathigampa354-ship-it/agentp",
-  "title": "TikTok-only Social Media Posting",
-  "description": "Publish and schedule TikTok videos through this TikTok-only Taisly Agent Kit fork.",
+  "title": "TikTok Account Posting",
+  "description": "Publish and schedule TikTok videos through this simplified Taisly Agent Kit fork.",
   "websiteUrl": "https://github.com/swathigampa354-ship-it/agentp",
   "repository": {
     "url": "https://github.com/swathigampa354-ship-it/agentp",

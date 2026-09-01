@@ -1,6 +1,6 @@
 # Claude Code Recipe: Schedule A TikTok Video Post
 
-Use this recipe when the user asks Claude Code to schedule a short-form video to TikTok through this fork.
+Use this recipe when the user asks Claude Code to schedule a short-form video to TikTok through this repository.
 
 ## Prompt Shape
 
@@ -14,13 +14,13 @@ Caption: "A quick demo of what shipped today."
 1. Discover connected TikTok accounts.
 
 ```bash
-taisly platforms:list
+taisly accounts:list
 ```
 
 2. Inspect TikTok constraints.
 
 ```bash
-taisly platforms:schema --platform TikTok
+taisly schema
 ```
 
 3. Convert the requested time to an explicit ISO timestamp.
@@ -28,7 +28,7 @@ taisly platforms:schema --platform TikTok
 ```json
 {
   "video": "./demo.mp4",
-  "platforms": ["tiktok_platform_id"],
+  "accounts": ["tiktok_account_id"],
   "description": "A quick demo of what shipped today.",
   "scheduled": "2026-06-14T09:00:00+07:00"
 }

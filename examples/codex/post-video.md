@@ -1,10 +1,10 @@
 # Codex Recipe: Post A Short Video To TikTok
 
-Use this recipe when the user asks Codex to publish a short-form video to TikTok through this fork.
+Use this recipe when the user asks Codex to publish a short-form video to TikTok through this repository.
 
 ## Preconditions
 
-- `TAISLY_API_KEY` is set in the local environment.
+- `TAISLY_API_KEY` is set in the local environment or setup/checkin was completed.
 - The video file exists locally.
 - The user has connected TikTok accounts in Taisly.
 
@@ -27,7 +27,7 @@ taisly auth:status
 2. List connected TikTok accounts.
 
 ```bash
-taisly platforms:list
+taisly accounts:list
 ```
 
 3. Ask the user to confirm the exact TikTok account ID.
@@ -37,7 +37,7 @@ taisly platforms:list
 ```json
 {
   "video": "./launch.mp4",
-  "platforms": ["tiktok_platform_id"],
+  "accounts": ["tiktok_account_id"],
   "description": "New product update is live."
 }
 ```
@@ -62,6 +62,6 @@ taisly posts:status --id <historyId>
 
 ## Safety
 
-- Do not invent TikTok platform IDs.
+- Do not invent TikTok account IDs.
 - Do not post to every connected TikTok account unless the user explicitly asks.
 - Do not print `TAISLY_API_KEY`.

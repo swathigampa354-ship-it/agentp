@@ -20,7 +20,7 @@ taisly auth:status
 2. List connected TikTok accounts and choose the requested destination.
 
 ```bash
-taisly platforms:list
+taisly accounts:list
 ```
 
 3. Create a JSON payload.
@@ -28,7 +28,7 @@ taisly platforms:list
 ```json
 {
   "video": "./assets/build-demo.mp4",
-  "platforms": ["tiktok_platform_id"],
+  "accounts": ["tiktok_account_id"],
   "description": "Shipped today: a faster workflow for publishing TikTok videos."
 }
 ```

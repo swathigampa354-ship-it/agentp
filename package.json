@@ -1,7 +1,7 @@
 {
   "name": "@swathigampa354-ship-it/agentp",
   "version": "0.2.8",
-  "description": "TikTok-only agent kit for publishing and scheduling short-form videos through Taisly.",
+  "description": "TikTok account posting agent kit for publishing and scheduling videos through Taisly.",
   "type": "module",
   "main": "src/index.js",
   "mcpName": "io.github.swathigampa354-ship-it/agentp",
@@ -37,8 +37,8 @@
   "keywords": [
     "tiktok",
     "tiktok-api",
-    "tiktok-automation",
-    "tiktok-scheduler",
+    "tiktok-account-posting",
+    "tiktok-scheduling",
     "tiktok-publishing",
     "video-publishing",
     "short-form-video",

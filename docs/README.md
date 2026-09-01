@@ -1,16 +1,15 @@
-# TikTok-only documentation
+# TikTok account posting documentation
 
 This fork is restricted to TikTok publishing and scheduling through the existing Taisly Agent Kit control flow.
 
-Supported platform:
+Current scope:
 
-- TikTok
+- authenticate with Taisly,
+- list connected TikTok accounts,
+- connect/check TikTok accounts,
+- validate local videos,
+- publish or schedule TikTok posts,
+- list post history and check post status,
+- expose the workflow through CLI and MCP.
 
-Removed from this fork:
-
-- unsupported platform connection instructions,
-- unsupported posting examples,
-- unsupported MCP and CLI descriptions,
-- the old broad-platform marketing banner.
-
-Use the top-level `README.md` and `SKILL.md` for the current TikTok-only workflow.
+Use the top-level `README.md` and `SKILL.md` for the current workflow.

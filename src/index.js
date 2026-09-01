@@ -3,7 +3,8 @@ import path from "node:path";
 import { readStoredCredential } from "./config.js";
 
 export const DEFAULT_API_URL = "https://app.taisly.com/api/private";
-export const ONLY_SUPPORTED_PLATFORM = "TikTok";
+export const SUPPORTED_ACCOUNT_TYPE = "TikTok";
+const TIKTOK_CONNECT_SLUG = "tiktok";
 const DEFAULT_HISTORY_PAGE = 1;
 const VIDEO_MIME_BY_EXTENSION = {
   ".mp4": "video/mp4",
@@ -60,111 +61,109 @@ export class Taisly {
     return data;
   }
 
-  async getAllPlatforms() {
+  async getAllAccounts() {
     const response = await this.request("/platform/platforms");
-    return normalizePlatforms(response.data || []);
+    return normalizeAccounts(response.data || []);
   }
 
-  async getTikTokPlatforms() {
-    const platforms = await this.getAllPlatforms();
-    return platforms.filter(isTikTokPlatform);
+  async getTikTokAccounts() {
+    const accounts = await this.getAllAccounts();
+    return accounts.filter(isTikTokAccount);
   }
 
-  async assertTikTokPlatformIds(platformIds) {
-    const tikTokPlatforms = await this.getTikTokPlatforms();
-    const allowedIds = new Set(tikTokPlatforms.map((platform) => platform.id));
-    const unsupportedIds = platformIds.filter((id) => !allowedIds.has(String(id)));
+  async assertTikTokAccountIds(accountIds) {
+    const tikTokAccounts = await this.getTikTokAccounts();
+    const allowedIds = new Set(tikTokAccounts.map((account) => account.id));
+    const unsupportedIds = accountIds.filter((id) => !allowedIds.has(String(id)));
 
     if (unsupportedIds.length > 0) {
       throw new TaislyError(
-        "TIKTOK_PLATFORM_ID_REQUIRED",
-        "Only connected TikTok platform IDs are supported by this tool.",
+        "TIKTOK_ACCOUNT_ID_REQUIRED",
+        "Only connected TikTok account IDs are supported by this tool.",
         {
           unsupportedIds,
-          supportedPlatform: ONLY_SUPPORTED_PLATFORM,
-          tikTokPlatformIds: tikTokPlatforms.map((platform) => platform.id),
+          supportedAccountType: SUPPORTED_ACCOUNT_TYPE,
+          tikTokAccountIds: tikTokAccounts.map((account) => account.id),
         },
       );
     }
 
-    return tikTokPlatforms.filter((platform) => platformIds.includes(platform.id));
+    return tikTokAccounts.filter((account) => accountIds.includes(account.id));
   }
 
   auth = {
     status: async () => {
-      const platforms = await this.getAllPlatforms();
-      const tikTokPlatforms = platforms.filter(isTikTokPlatform);
+      const accounts = await this.getAllAccounts();
+      const tikTokAccounts = accounts.filter(isTikTokAccount);
 
       return {
         success: true,
         authenticated: true,
-        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
-        platformCount: tikTokPlatforms.length,
-        totalConnectedPlatformCount: platforms.length,
+        supportedAccountType: SUPPORTED_ACCOUNT_TYPE,
+        accountCount: tikTokAccounts.length,
+        totalConnectedAccountCount: accounts.length,
       };
     },
   };
 
-  platforms = {
+  accounts = {
     list: async () => {
-      const platforms = await this.getAllPlatforms();
-      const tikTokPlatforms = platforms.filter(isTikTokPlatform);
+      const accounts = await this.getAllAccounts();
+      const tikTokAccounts = accounts.filter(isTikTokAccount);
 
       return {
         success: true,
-        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
-        count: tikTokPlatforms.length,
-        totalConnectedPlatformCount: platforms.length,
-        data: tikTokPlatforms,
+        supportedAccountType: SUPPORTED_ACCOUNT_TYPE,
+        count: tikTokAccounts.length,
+        totalConnectedAccountCount: accounts.length,
+        data: tikTokAccounts,
       };
     },
 
-    schema: async (platform) => ({
+    schema: async () => ({
       success: true,
-      data: getPlatformSchema(platform),
+      data: getTikTokSchema(),
     }),
 
-    connectStart: async ({ platform }) => {
-      const platformKey = normalizeConnectPlatform(platform);
+    connectStart: async () => {
       const response = await this.request(
         `/agent/platform/connect/start?platform=${encodeURIComponent(
-          platformKey,
+          TIKTOK_CONNECT_SLUG,
         )}`,
       );
 
       return {
         success: true,
-        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+        supportedAccountType: SUPPORTED_ACCOUNT_TYPE,
         ...(response.data || {}),
       };
     },
 
-    connectCheck: async ({ platform }) => {
-      const platformKey = normalizeConnectPlatform(platform);
+    connectCheck: async () => {
       const response = await this.request(
         `/agent/platform/connect/check?platform=${encodeURIComponent(
-          platformKey,
+          TIKTOK_CONNECT_SLUG,
         )}`,
       );
 
       return {
         success: true,
-        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+        supportedAccountType: SUPPORTED_ACCOUNT_TYPE,
         ...(response.data || {}),
       };
     },
   };
 
   posts = {
-    validate: async ({ video, platforms, description, scheduled }) => {
+    validate: async ({ video, accounts, description, scheduled }) => {
       if (!video) throw new TaislyError("VIDEO_REQUIRED", "Pass --video.");
       if (!description) {
         throw new TaislyError("DESCRIPTION_REQUIRED", "Pass --description.");
       }
 
-      const platformIds = normalizePlatformIds(platforms);
-      if (platformIds.length === 0) {
-        throw new TaislyError("PLATFORMS_REQUIRED", "Pass at least one TikTok platform id.");
+      const accountIds = normalizeAccountIds(accounts);
+      if (accountIds.length === 0) {
+        throw new TaislyError("ACCOUNTS_REQUIRED", "Pass at least one TikTok account id.");
       }
 
       const fileInfo = await stat(video);
@@ -181,39 +180,39 @@ export class Taisly {
         );
       }
 
-      const tikTokPlatforms = await this.assertTikTokPlatformIds(platformIds);
+      const tikTokAccounts = await this.assertTikTokAccountIds(accountIds);
 
       return {
         success: true,
-        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+        supportedAccountType: SUPPORTED_ACCOUNT_TYPE,
         data: {
           video,
           filename: path.basename(video),
           sizeBytes: fileInfo.size,
           sizeMb: Number((fileInfo.size / 1024 / 1024).toFixed(2)),
-          platforms: platformIds,
-          platformDetails: tikTokPlatforms,
+          accounts: accountIds,
+          accountDetails: tikTokAccounts,
           descriptionLength: description.length,
           scheduled: scheduled ? normalizeScheduled(scheduled) : null,
         },
       };
     },
 
-    create: async ({ video, platforms, description, scheduled, previewTime = 0 }) => {
+    create: async ({ video, accounts, description, scheduled, previewTime = 0 }) => {
       const validation = await this.posts.validate({
         video,
-        platforms,
+        accounts,
         description,
         scheduled,
       });
-      const platformIds = validation.data.platforms;
+      const accountIds = validation.data.accounts;
 
       const form = new FormData();
       const bytes = await readFile(video);
       const filename = path.basename(video);
       const mimeType = getVideoMimeType(video);
       form.append("video", new Blob([bytes], { type: mimeType }), filename);
-      form.append("platforms", JSON.stringify(platformIds));
+      form.append("platforms", JSON.stringify(accountIds));
       form.append("description", description);
       form.append("previewTime", String(previewTime));
 
@@ -240,13 +239,13 @@ export class Taisly {
         throw new TaislyError(
           "POST_NOT_FOUND_IN_RECENT_TIKTOK_HISTORY",
           "Recent TikTok-only history did not include this id.",
-          { historyId, supportedPlatform: ONLY_SUPPORTED_PLATFORM },
+          { historyId, supportedAccountType: SUPPORTED_ACCOUNT_TYPE },
         );
       }
 
       return {
         success: true,
-        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+        supportedAccountType: SUPPORTED_ACCOUNT_TYPE,
         data: post,
       };
     },
@@ -262,39 +261,10 @@ export class Taisly {
 
       return {
         success: true,
-        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+        supportedAccountType: SUPPORTED_ACCOUNT_TYPE,
         page: Number(page),
         count: tikTokHistory.length,
         data: tikTokHistory,
-      };
-    },
-  };
-
-  reposts = {
-    create: async ({ from, to }) => {
-      if (!from) throw new TaislyError("REPOST_FROM_REQUIRED", "Pass --from with a TikTok platform id.");
-      const toList = normalizePlatformIds(to);
-      if (toList.length === 0) {
-        throw new TaislyError("REPOST_TO_REQUIRED", "Pass at least one TikTok destination.");
-      }
-
-      await this.assertTikTokPlatformIds([String(from), ...toList]);
-
-      return this.request("/repost/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ from, to: toList }),
-      });
-    },
-
-    list: async () => {
-      const response = await this.request("/reposts");
-      const reposts = filterRepostsForTikTok(response.data || []);
-
-      return {
-        success: true,
-        supportedPlatform: ONLY_SUPPORTED_PLATFORM,
-        data: reposts,
       };
     },
   };
@@ -327,19 +297,9 @@ function getRequestErrorMessage(data, response) {
   return response.statusText || "Taisly request failed";
 }
 
-export function getPlatformSchema(platform = ONLY_SUPPORTED_PLATFORM) {
-  const normalized = String(platform || ONLY_SUPPORTED_PLATFORM).toLowerCase();
-
-  if (normalized !== "tiktok") {
-    throw new TaislyError(
-      "UNSUPPORTED_PLATFORM",
-      "Only TikTok is supported by this tool.",
-      { requestedPlatform: platform, supportedPlatform: ONLY_SUPPORTED_PLATFORM },
-    );
-  }
-
+export function getTikTokSchema() {
   return {
-    platform: ONLY_SUPPORTED_PLATFORM,
+    accountType: SUPPORTED_ACCOUNT_TYPE,
     media: {
       type: "video",
       maxSizeMb: 500,
@@ -375,33 +335,13 @@ export async function readJsonFile(filepath) {
   }
 }
 
-export function normalizePlatformIds(platforms) {
-  if (!platforms) return [];
-  if (Array.isArray(platforms)) return platforms.map(String).filter(Boolean);
-  return String(platforms)
+export function normalizeAccountIds(accounts) {
+  if (!accounts) return [];
+  if (Array.isArray(accounts)) return accounts.map(String).filter(Boolean);
+  return String(accounts)
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
-}
-
-function normalizeConnectPlatform(platform) {
-  const value = String(platform || "")
-    .trim()
-    .toLowerCase();
-
-  if (!value) {
-    throw new TaislyError("PLATFORM_REQUIRED", "Pass --platform tiktok.");
-  }
-
-  if (value !== "tiktok") {
-    throw new TaislyError(
-      "UNSUPPORTED_PLATFORM",
-      "Only TikTok account connections are supported by this tool.",
-      { requestedPlatform: platform, supportedPlatform: ONLY_SUPPORTED_PLATFORM },
-    );
-  }
-
-  return value;
 }
 
 export function normalizeScheduled(value) {
@@ -419,20 +359,28 @@ export function normalizeScheduled(value) {
   return String(date.getTime());
 }
 
-function normalizePlatforms(platforms) {
-  return platforms.map((platform) => ({
-    ...platform,
-    id: String(platform.id || platform._id || ""),
-    platform: platform.platform || platform.identifier,
+function normalizeAccounts(accounts) {
+  return accounts.map((account) => ({
+    ...account,
+    id: String(account.id || account._id || ""),
+    accountType: account.accountType || account.platform || account.identifier,
   }));
 }
 
-function isTikTokPlatform(platform) {
-  const value = String(platform?.platform || platform?.identifier || "")
+function isTikTokAccount(account) {
+  const value = String(
+    account?.accountType ||
+      account?.platform ||
+      account?.identifier ||
+      account?.provider ||
+      account?.type ||
+      account?.slug ||
+      "",
+  )
     .trim()
     .toLowerCase();
 
-  return value === "tiktok";
+  return value === TIKTOK_CONNECT_SLUG;
 }
 
 function filterPostHistoryForTikTok(history) {
@@ -445,16 +393,7 @@ function filterPostHistoryForTikTok(history) {
 }
 
 function filterTikTokResults(results) {
-  return results.filter(isTikTokPlatform);
-}
-
-function filterRepostsForTikTok(reposts) {
-  return reposts
-    .map((repost) => ({
-      ...repost,
-      to: (repost.to || []).filter(isTikTokPlatform),
-    }))
-    .filter((repost) => isTikTokPlatform(repost.from) && repost.to.length > 0);
+  return results.filter(isTikTokAccount);
 }
 
 function normalizePostCreateResponse(response) {
@@ -462,7 +401,7 @@ function normalizePostCreateResponse(response) {
 
   return {
     success: true,
-    supportedPlatform: ONLY_SUPPORTED_PLATFORM,
+    supportedAccountType: SUPPORTED_ACCOUNT_TYPE,
     historyId: historyId ? String(historyId) : undefined,
     scheduled: Boolean(response.scheduled),
     date: response.date,

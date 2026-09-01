@@ -48,41 +48,32 @@ async function run(commandName, options) {
     case "auth:status":
       return client.auth.status();
 
-    case "platforms:list":
-    case "integrations:list":
-      return client.platforms.list();
+    case "accounts:list":
+      return client.accounts.list();
 
-    case "platforms:schema":
-    case "integrations:schema":
-    case "integrations:settings":
-      return client.platforms.schema(options.platform || options._[0] || "TikTok");
+    case "schema":
+      return client.accounts.schema();
 
-    case "platforms:connect:start":
-    case "integrations:connect:start":
-      return client.platforms.connectStart({
-        platform: options.platform || options._[0] || "tiktok",
-      });
+    case "account:connect:start":
+      return client.accounts.connectStart();
 
-    case "platforms:connect:check":
-    case "integrations:connect:check":
-      return client.platforms.connectCheck({
-        platform: options.platform || options._[0] || "tiktok",
-      });
+    case "account:connect:check":
+      return client.accounts.connectCheck();
 
     case "posts:validate":
       return client.posts.validate({
         video: options.video,
-        platforms: options.platforms || options.integrations,
-        description: options.description || options.caption,
-        scheduled: options.scheduled || options.at,
+        accounts: options.accounts,
+        description: options.description,
+        scheduled: options.scheduled,
       });
 
     case "posts:create":
       return client.posts.create({
         video: options.video,
-        platforms: options.platforms || options.integrations,
-        description: options.description || options.caption,
-        scheduled: options.scheduled || options.at,
+        accounts: options.accounts,
+        description: options.description,
+        scheduled: options.scheduled,
         previewTime: options.previewTime || 0,
       });
 
@@ -95,15 +86,6 @@ async function run(commandName, options) {
 
     case "posts:status":
       return client.posts.status(options.id || options._[0]);
-
-    case "reposts:list":
-      return client.reposts.list();
-
-    case "reposts:create":
-      return client.reposts.create({
-        from: options.from,
-        to: options.to,
-      });
 
     case "help":
     case undefined:
@@ -120,36 +102,32 @@ async function run(commandName, options) {
 function help() {
   return {
     success: true,
-    supportedPlatform: "TikTok",
+    supportedAccountType: "TikTok",
     commands: [
-      "auth:status",
       "setup --agent <agent>",
       "checkin --agent <agent>",
-      "platforms:list",
-      "integrations:list",
-      "platforms:schema --platform TikTok",
-      "platforms:connect:start --platform tiktok",
-      "platforms:connect:check --platform tiktok",
-      "posts:validate --video ./launch.mp4 --platforms <tiktok_id,tiktok_id> --description 'Launch day'",
-      "posts:create --video ./launch.mp4 --platforms <tiktok_id,tiktok_id> --description 'Launch day' --scheduled 2026-06-14T09:00:00+07:00",
+      "auth:status",
+      "accounts:list",
+      "schema",
+      "account:connect:start",
+      "account:connect:check",
+      "posts:validate --video ./launch.mp4 --accounts <tiktok_account_id,tiktok_account_id> --description 'Launch day'",
+      "posts:create --video ./launch.mp4 --accounts <tiktok_account_id,tiktok_account_id> --description 'Launch day' --scheduled 2026-06-14T09:00:00+07:00",
       "posts:create --json campaign.json",
       "posts:list --page 1",
       "posts:status --id <historyId>",
-      "reposts:list",
-      "reposts:create --from <tiktokPlatformId> --to <tiktokPlatformId,tiktokPlatformId>",
       "mcp",
     ],
     env: [
       "TAISLY_API_KEY",
     ],
     jsonInput:
-      "Pass --json file.json or --input file.json to load command options from a JSON file. Run taisly setup to connect through the browser, then taisly mcp to start the stdio MCP server. This fork accepts TikTok platform IDs only.",
+      "Pass --json file.json to load command options from a JSON file. Use accounts for TikTok account IDs.",
   };
 }
 
 async function loadJsonInput(options) {
-  const filepath =
-    options.input || (typeof options.json === "string" ? options.json : undefined);
+  const filepath = typeof options.json === "string" ? options.json : undefined;
 
   if (!filepath) return options;
 

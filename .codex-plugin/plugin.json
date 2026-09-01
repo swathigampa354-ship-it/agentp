@@ -1,7 +1,7 @@
 {
-  "name": "tiktok-only-agent-kit",
+  "name": "tiktok-account-posting-agent-kit",
   "version": "0.2.8",
-  "description": "Publish and schedule TikTok videos from Codex through this TikTok-only Taisly Agent Kit fork.",
+  "description": "Publish and schedule TikTok videos from Codex through this simplified Taisly Agent Kit fork.",
   "author": {
     "name": "Taisly fork",
     "url": "https://github.com/swathigampa354-ship-it/agentp"
@@ -19,16 +19,16 @@
   ],
   "skills": "./SKILL.md",
   "mcpServers": {
-    "tiktok-only": {
+    "tiktok-account-posting": {
       "type": "stdio",
       "command": "node",
       "args": ["src/cli.js", "mcp"]
     }
   },
   "interface": {
-    "displayName": "TikTok-only Agent Kit",
+    "displayName": "TikTok Account Posting",
     "shortDescription": "Publish TikTok videos from Codex.",
-    "longDescription": "Connect Codex to this TikTok-only posting workflow. It lists connected TikTok accounts, validates videos, asks for confirmation, then publishes or schedules TikTok posts.",
+    "longDescription": "Connect Codex to a TikTok account posting workflow. It lists connected TikTok accounts, validates videos, asks for confirmation, then publishes or schedules TikTok posts.",
     "developerName": "Taisly fork",
     "category": "Productivity",
     "capabilities": ["MCP", "Skills", "Write"],

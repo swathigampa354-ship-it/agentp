@@ -96,7 +96,7 @@ export async function checkinAgent(options = {}) {
 }
 
 export function getAgent(options = {}) {
-  const value = String(options.agent || options.agentId || options._?.[0] || "local-agent")
+  const value = String(options.agent || "local-agent")
     .toLowerCase()
     .replace(/[^a-z0-9_-]/g, "")
     .slice(0, 40);

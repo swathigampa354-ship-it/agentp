@@ -9,7 +9,7 @@ const SUPPORTED_PROTOCOL_VERSIONS = new Set([
   "2024-11-05",
 ]);
 const SERVER_NAME = "taisly-agent-kit";
-const SERVER_TITLE = "TikTok-only Taisly Agent Kit";
+const SERVER_TITLE = "TikTok Account Posting Agent Kit";
 const SERVER_VERSION = "0.2.8";
 
 const JSON_OBJECT_SCHEMA = {
@@ -46,10 +46,6 @@ const TOOLS = [
           description:
             "Short agent slug, for example claude-code, codex, cursor, openclaw, or local-agent.",
         },
-        agentId: {
-          type: "string",
-          description: "Alias for agent.",
-        },
       },
       additionalProperties: false,
     },
@@ -68,10 +64,6 @@ const TOOLS = [
           description:
             "Short agent slug used with taisly_agent_setup_start.",
         },
-        agentId: {
-          type: "string",
-          description: "Alias for agent.",
-        },
       },
       additionalProperties: false,
     },
@@ -88,9 +80,9 @@ const TOOLS = [
     },
   },
   {
-    name: "taisly_platforms_list",
-    title: "List Taisly Platforms",
-    description: "List connected TikTok accounts available to this API key. Unsupported accounts are filtered out.",
+    name: "taisly_accounts_list",
+    title: "List TikTok Accounts",
+    description: "List connected TikTok accounts available to this API key.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -99,64 +91,44 @@ const TOOLS = [
     },
   },
   {
-    name: "taisly_platform_schema",
-    title: "Get Platform Posting Schema",
+    name: "taisly_schema",
+    title: "Get TikTok Posting Schema",
     description: "Get local TikTok posting constraints before validating or creating a post.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
-      properties: {
-        platform: {
-          type: "string",
-          description: "Platform name. Only TikTok is supported.",
-        },
-      },
-      required: ["platform"],
+      properties: {},
       additionalProperties: false,
     },
   },
   {
-    name: "taisly_platform_connect_start",
+    name: "taisly_account_connect_start",
     title: "Start TikTok Account Connection",
     description:
       "Start browser-based connection for a TikTok account. Returns a connectUrl that the user must open and approve in the browser.",
     annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
-      properties: {
-        platform: {
-          type: "string",
-          description:
-            "Platform to connect. Only supported value: tiktok.",
-        },
-      },
-      required: ["platform"],
+      properties: {},
       additionalProperties: false,
     },
   },
   {
-    name: "taisly_platform_connect_check",
+    name: "taisly_account_connect_check",
     title: "Check TikTok Account Connection",
     description:
-      "Check whether a TikTok account connection started by taisly_platform_connect_start has appeared in Taisly.",
+      "Check whether a TikTok account connection started by taisly_account_connect_start has appeared in Taisly.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
-      properties: {
-        platform: {
-          type: "string",
-          description:
-            "Platform to check. Only supported value: tiktok.",
-        },
-      },
-      required: ["platform"],
+      properties: {},
       additionalProperties: false,
     },
   },
   {
     name: "taisly_posts_validate",
-    title: "Validate Taisly Post",
-    description: "Validate a local video path, TikTok platform IDs, caption, and optional schedule before publishing.",
+    title: "Validate TikTok Post",
+    description: "Validate a local video path, TikTok account IDs, caption, and optional schedule before publishing.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -165,12 +137,12 @@ const TOOLS = [
           type: "string",
           description: "Local video path available to the agent.",
         },
-        platforms: {
+        accounts: {
           oneOf: [
             { type: "array", items: { type: "string" } },
             { type: "string" },
           ],
-          description: "TikTok platform IDs from taisly_platforms_list.",
+          description: "TikTok account IDs from taisly_accounts_list.",
         },
         description: {
           type: "string",
@@ -181,13 +153,13 @@ const TOOLS = [
           description: "Optional ISO datetime or Unix timestamp in milliseconds.",
         },
       },
-      required: ["video", "platforms", "description"],
+      required: ["video", "accounts", "description"],
       additionalProperties: false,
     },
   },
   {
     name: "taisly_posts_create",
-    title: "Create Taisly Post",
+    title: "Create TikTok Post",
     description: "Publish or schedule a TikTok video post through Taisly after the user explicitly confirms the media, TikTok accounts, caption, and schedule.",
     annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
@@ -197,12 +169,12 @@ const TOOLS = [
           type: "string",
           description: "Local video path available to the agent.",
         },
-        platforms: {
+        accounts: {
           oneOf: [
             { type: "array", items: { type: "string" } },
             { type: "string" },
           ],
-          description: "TikTok platform IDs from taisly_platforms_list.",
+          description: "TikTok account IDs from taisly_accounts_list.",
         },
         description: {
           type: "string",
@@ -221,13 +193,13 @@ const TOOLS = [
           description: "Must be true only after explicit user confirmation.",
         },
       },
-      required: ["video", "platforms", "description", "confirmed"],
+      required: ["video", "accounts", "description", "confirmed"],
       additionalProperties: false,
     },
   },
   {
     name: "taisly_posts_status",
-    title: "Get Taisly Post Status",
+    title: "Get TikTok Post Status",
     description: "Fetch recent-history status for a Taisly post by historyId.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
@@ -247,7 +219,7 @@ const TOOLS = [
   },
   {
     name: "taisly_posts_list",
-    title: "List Taisly Posts",
+    title: "List TikTok Posts",
     description: "List recent TikTok post history for status checks and audits.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
@@ -269,57 +241,20 @@ const TOOLS = [
       additionalProperties: false,
     },
   },
-  {
-    name: "taisly_reposts_list",
-    title: "List Taisly Reposts",
-    description: "List configured repost automations for connected TikTok accounts.",
-    annotations: READ_ONLY_TOOL_ANNOTATIONS,
-    inputSchema: {
-      type: "object",
-      properties: {},
-      additionalProperties: false,
-    },
-  },
-  {
-    name: "taisly_reposts_create",
-    title: "Create Taisly Repost",
-    description: "Create a repost automation between connected TikTok accounts only.",
-    annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
-    inputSchema: {
-      type: "object",
-      properties: {
-        from: {
-          type: "string",
-          description: "Source TikTok platform ID.",
-        },
-        to: {
-          oneOf: [
-            { type: "array", items: { type: "string" } },
-            { type: "string" },
-          ],
-          description: "Destination TikTok platform IDs.",
-        },
-      },
-      required: ["from", "to"],
-      additionalProperties: false,
-    },
-  },
 ];
 
 const TOOL_HANDLERS = {
   taisly_agent_setup_start: (_client, args) => setupAgent(args),
   taisly_agent_checkin: (_client, args) => checkinAgent(args),
   taisly_auth_status: (client) => client.auth.status(),
-  taisly_platforms_list: (client) => client.platforms.list(),
-  taisly_platform_schema: (client, args) => client.platforms.schema(args.platform),
-  taisly_platform_connect_start: (client, args) =>
-    client.platforms.connectStart({ platform: args.platform }),
-  taisly_platform_connect_check: (client, args) =>
-    client.platforms.connectCheck({ platform: args.platform }),
+  taisly_accounts_list: (client) => client.accounts.list(),
+  taisly_schema: (client) => client.accounts.schema(),
+  taisly_account_connect_start: (client) => client.accounts.connectStart(),
+  taisly_account_connect_check: (client) => client.accounts.connectCheck(),
   taisly_posts_validate: (client, args) =>
     client.posts.validate({
       video: args.video,
-      platforms: args.platforms,
+      accounts: args.accounts,
       description: args.description,
       scheduled: args.scheduled,
     }),
@@ -334,7 +269,7 @@ const TOOL_HANDLERS = {
 
     return client.posts.create({
       video: args.video,
-      platforms: args.platforms,
+      accounts: args.accounts,
       description: args.description,
       scheduled: args.scheduled,
       previewTime: args.previewTime || 0,
@@ -346,12 +281,6 @@ const TOOL_HANDLERS = {
       page: args.page || 1,
       startTime: args.startTime,
       endTime: args.endTime,
-    }),
-  taisly_reposts_list: (client) => client.reposts.list(),
-  taisly_reposts_create: (client, args) =>
-    client.reposts.create({
-      from: args.from,
-      to: args.to,
     }),
 };
 
@@ -459,7 +388,7 @@ class TaislyMcpServer {
         version: SERVER_VERSION,
       },
       instructions:
-        "If Taisly is not connected yet, use taisly_agent_setup_start, send the user the returned loginUrl, wait for browser approval, then use taisly_agent_checkin. If a TikTok account is missing, use taisly_platform_connect_start with platform tiktok, send the user the returned connectUrl, wait for browser approval, then use taisly_platform_connect_check. After setup, discover connected TikTok accounts, validate posts, ask for explicit user confirmation, then create and monitor TikTok posts. This fork supports TikTok only.",
+        "If Taisly is not connected yet, use taisly_agent_setup_start, send the user the returned loginUrl, wait for browser approval, then use taisly_agent_checkin. If a TikTok account is missing, use taisly_account_connect_start, send the user the returned connectUrl, wait for browser approval, then use taisly_account_connect_check. After setup, discover connected TikTok accounts, validate posts, ask for explicit user confirmation, then create and monitor TikTok posts.",
     };
   }
 
