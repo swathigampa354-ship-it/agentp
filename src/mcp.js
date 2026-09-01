@@ -90,7 +90,7 @@ const TOOLS = [
   {
     name: "taisly_platforms_list",
     title: "List Taisly Platforms",
-    description: "List connected TikTok accounts available to this API key. Non-TikTok accounts are filtered out.",
+    description: "List connected TikTok accounts available to this API key. Unsupported accounts are filtered out.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -101,7 +101,7 @@ const TOOLS = [
   {
     name: "taisly_platform_schema",
     title: "Get Platform Posting Schema",
-    description: "Get local posting constraints for a destination platform before validating or creating a post.",
+    description: "Get local TikTok posting constraints before validating or creating a post.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -117,9 +117,9 @@ const TOOLS = [
   },
   {
     name: "taisly_platform_connect_start",
-    title: "Start Social Account Connection",
+    title: "Start TikTok Account Connection",
     description:
-      "Start browser-based connection for a social account. Returns a connectUrl that the user must open and approve in the browser.",
+      "Start browser-based connection for a TikTok account. Returns a connectUrl that the user must open and approve in the browser.",
     annotations: EXTERNAL_MUTATING_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -136,9 +136,9 @@ const TOOLS = [
   },
   {
     name: "taisly_platform_connect_check",
-    title: "Check Social Account Connection",
+    title: "Check TikTok Account Connection",
     description:
-      "Check whether a social account connection started by taisly_platform_connect_start has appeared in Taisly.",
+      "Check whether a TikTok account connection started by taisly_platform_connect_start has appeared in Taisly.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -248,7 +248,7 @@ const TOOLS = [
   {
     name: "taisly_posts_list",
     title: "List Taisly Posts",
-    description: "List recent Taisly post history for status checks and audits.",
+    description: "List recent TikTok post history for status checks and audits.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",

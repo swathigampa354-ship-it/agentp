@@ -8,9 +8,9 @@ Supported platform:
 
 Removed from this fork:
 
-- all non-TikTok platform connection instructions,
-- all non-TikTok posting examples,
-- all non-TikTok MCP and CLI descriptions,
-- the old multi-platform marketing banner.
+- unsupported platform connection instructions,
+- unsupported posting examples,
+- unsupported MCP and CLI descriptions,
+- the old broad-platform marketing banner.
 
 Use the top-level `README.md` and `SKILL.md` for the current TikTok-only workflow.

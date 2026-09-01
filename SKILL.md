@@ -15,7 +15,7 @@ metadata:
 
 Use this skill when a user asks an AI agent to publish, schedule, inspect, or retry short-form video posting through this TikTok-only fork.
 
-This fork supports **TikTok only**. Do not select, connect, validate, publish, schedule, or manage any other social platform.
+This fork supports **TikTok only**. Select, connect, validate, publish, schedule, and manage TikTok destinations only.
 
 ## Safety Rules
 
@@ -116,4 +116,4 @@ When the MCP server is connected, use these tools instead of shell commands:
 - Do not post to every connected TikTok account unless the user explicitly asks.
 - Do not publish without confirmation.
 - Do not print secrets.
-- Do not create, connect, validate, or manage any non-TikTok platform.
+- Create, connect, validate, and manage TikTok destinations only.

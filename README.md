@@ -11,7 +11,7 @@ It can be used by an AI agent or a shell workflow to:
 - check TikTok post history/status,
 - manage TikTok-only repost rules when the connected accounts support that workflow.
 
-All non-TikTok social platform support has been removed from this fork.
+This fork exposes TikTok as the only destination.
 
 ## Install
 
